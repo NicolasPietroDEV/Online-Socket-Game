@@ -25,6 +25,8 @@ socket.on("peopleMoved", (info)=>{
   if (index !== -1){
     movePlayer(info, index)
     players[index] = info
+    remount(sprite)
+
   } else {
     addPlayer(info)
   }
@@ -78,7 +80,6 @@ function addPlayer(sprite, notPush){
 }
 
 function movePlayer(playerSprite, index){
-  remount(sprite)
   ctx.clearRect(players[index].x, players[index].y, 20,10)
   ctx.fillStyle = playerSprite.color
   ctx.fillRect(playerSprite.x, playerSprite.y, 20, 10)
