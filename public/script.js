@@ -32,11 +32,13 @@ socket.on("peopleMoved", (info)=>{
 
 socket.on("newPlayer", (info)=>{
   console.log("new player: " + JSON.stringify(info))
+  chat.innerHTML += `<p style='text-align: center; color: white; background-color: ${info.color}'>O Jogador ${info.id} entrou</p>`
   addPlayer(info)
 })
 
 socket.on("playerLeft", (id)=>{
-  console.log(id + " saiu")
+  let left = players.find(player=>player.id === id)
+  chat.innerHTML += `<p style='text-align: center; color: red; background-color: ${left.color}'>O Jogador ${id} saiu</p>`
   
   let index = players.findIndex(playerInfo=>playerInfo.id === id)
   ctx.clearRect(players[index].x, players[index].y, 20,10)
@@ -69,17 +71,17 @@ function onStart(){
   socket.emit("newPlayer", {...sprite})
 }
 
-function addPlayer(sprite){
+function addPlayer(sprite, notPush){
   ctx.fillStyle= sprite.color;
   ctx.fillRect(sprite.x,sprite.y,20,10)
-  players.push(sprite)
-
+  if (!notPush) players.push(sprite)
 }
 
-function movePlayer(sprite, index){
-  ctx.fillStyle = sprite.color
+function movePlayer(playerSprite, index){
+  remount(sprite)
   ctx.clearRect(players[index].x, players[index].y, 20,10)
-  ctx.fillRect(sprite.x, sprite.y, 20, 10)
+  ctx.fillStyle = playerSprite.color
+  ctx.fillRect(playerSprite.x, playerSprite.y, 20, 10)
 }
 
 function walk(direction){
@@ -107,14 +109,15 @@ function walk(direction){
 }
 
 function remount(previous){
-  ctx.fillStyle = sprite.color
   ctx.clearRect(previous.x, previous.y, 20,10)
+  remountPlayers(players, true)
+  ctx.fillStyle = sprite.color
   ctx.fillRect(sprite.x, sprite.y, 20, 10)
 }
 
-function remountPlayers(players){
+function remountPlayers(players, notPush){
   for (let player of players) {
-    addPlayer(player)
+    addPlayer(player, notPush)
   }
 }
 
