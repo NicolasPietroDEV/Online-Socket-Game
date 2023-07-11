@@ -1,0 +1,43 @@
+#canvas {
+  width: 500px;
+  height: 500px;
+  border: 1px solid black;
+  display: inline
+}
+
+#messages {
+  width: 500px;
+  height: 250px;
+  overflow: scroll;
+  border: 1px solid black;
+  margin: 5px auto;
+}
+
+#form {
+width: 100%;}
+
+#chat {
+  width: 500px;
+  height: 40px;
+}
+
+.message {
+  font-weight: 700;
+}
+
+#container {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+#campomensagem {
+  width: 80%;
+  height: 50px;
+}
+
+#botaomensagem{
+  width: 15%;
+  height: 50px;
+}
