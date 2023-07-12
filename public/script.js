@@ -2,18 +2,37 @@ console.log("cu de grilo")
 
 let socket = io()
 
-let canvas = document.getElementById("canvas")
 let campo = document.getElementById("campomensagem")
 let chat = document.getElementById("messages")
+let canvas = document.getElementById("canvas")
+let spriteImg = document.getElementById("sprite")
 let ctx = canvas.getContext("2d")
+var stylew = window.getComputedStyle(canvas);
+canvas.width = parseInt(stylew.width.substring(0,stylew.width.search("px")));
+canvas.height = parseInt(stylew.height.substring(0,stylew.height.search("px")));
+
 
 let sprite = {
   x: Math.floor(Math.random()*200),
   y: Math.floor(Math.random()*100),
+  width: 30,
+  height: 30,
   speed: 5
 }
 
 let players = []
+
+// ----------------------------------------------------------------------------------------------------
+// ----------------------------------------EVENT LISTENERS--------------------------------------------
+// ----------------------------------------------------------------------------------------------------
+
+canvas.addEventListener("keypress", (event)=>{
+  walk(event.key)
+})
+
+campo.addEventListener("keypress", (event)=>{
+  enterMessage(event)
+})
 
 // ----------------------------------------------------------------------------------------------------
 // ----------------------------------------SOCKET LISTENERS--------------------------------------------
@@ -43,7 +62,7 @@ socket.on("playerLeft", (id)=>{
   chat.innerHTML += `<p style='text-align: center; color: red; background-color: ${left.color}'>O Jogador ${id} saiu</p>`
   
   let index = players.findIndex(playerInfo=>playerInfo.id === id)
-  ctx.clearRect(players[index].x, players[index].y, 20,10)
+  ctx.clearRect(players[index].x, players[index].y, players[index].width, players[index].height)
   players.splice(index, 1)
 })
 
@@ -58,34 +77,28 @@ socket.on("newMessage", (message)=>{
 // ---------------------------------------- FUNCTIONS -------------------------------------------------
 // ----------------------------------------------------------------------------------------------------
 
-canvas.addEventListener("keypress", (event)=>{
-  walk(event.key)
-})
-
-campo.addEventListener("keypress", (event)=>{
-  enterMessage(event)
-})
-
 function onStart(){
   sprite.color = "#" + Math.floor(Math.random()*16777215).toString(16)
   ctx.fillStyle= sprite.color;
-  ctx.fillRect(sprite.x,sprite.y,20,10)
+  ctx.fillRect(sprite.x,sprite.y,sprite.width, sprite.height)
   socket.emit("newPlayer", {...sprite})
-}
+  ctx.imagecSmoothingEnabled = false
+  ctx.drawImage(spriteImg, 50, 30, 100, 160, 40, 40, 50, 80);}
 
 function addPlayer(sprite, notPush){
   ctx.fillStyle= sprite.color;
-  ctx.fillRect(sprite.x,sprite.y,20,10)
+  ctx.fillRect(sprite.x,sprite.y,sprite.width, sprite.height)
   if (!notPush) players.push(sprite)
 }
 
 function movePlayer(playerSprite, index){
-  ctx.clearRect(players[index].x, players[index].y, 20,10)
+  ctx.clearRect(players[index].x, players[index].y, players[index].width, players[index].height)
   ctx.fillStyle = playerSprite.color
-  ctx.fillRect(playerSprite.x, playerSprite.y, 20, 10)
+  ctx.fillRect(playerSprite.x, playerSprite.y, playerSprite.width, playerSprite.height)
 }
 
 function walk(direction){
+
   let previous = {...sprite}
   switch(direction){
     case "w":
@@ -97,11 +110,11 @@ function walk(direction){
       sprite.x -= sprite.speed
       break
     case "s":
-      if (sprite.y + sprite.speed >= 140) break
+      if (sprite.y + sprite.speed >= canvas.height-sprite.height) break
       sprite.y += sprite.speed
       break
     case "d":
-      if (sprite.x + sprite.speed >= 280) break
+      if (sprite.x + sprite.speed >= canvas.width-sprite.width) break
       sprite.x += sprite.speed
       break
   }
@@ -110,10 +123,10 @@ function walk(direction){
 }
 
 function remount(previous){
-  ctx.clearRect(previous.x, previous.y, 20,10)
+  ctx.clearRect(previous.x, previous.y, previous.width, previous.height)
   remountPlayers(players, true)
   ctx.fillStyle = sprite.color
-  ctx.fillRect(sprite.x, sprite.y, 20, 10)
+  ctx.fillRect(sprite.x, sprite.y, sprite.width, sprite.height)
 }
 
 function remountPlayers(players, notPush){
