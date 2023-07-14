@@ -8,13 +8,15 @@
   </head>
   <body>
     <div id="container">
-      <canvas id="canvas" tabindex="1" ></canvas>
+      <canvas id="canvas" class="box-shadow" tabindex="1" ></canvas>
       
-      <div id="chat">
+      <div id="chat" class="box-shadow">
         <div id="messages"></div>
         <div id="form">
           <input type="text" id="campomensagem" placeholder="Digite sua mensagem ..." >
-          <button id="botaomensagem" onclick="sendMessage()">Enviar</button>
+          <div id="botaomensagem" onclick="sendMessage()">
+            <img id="send" src="assets/send.png">
+          </div>
         </div>
       </div>
     </div>

@@ -33,12 +33,14 @@ io.on('connection', (socket) => {
   })
 
   socket.on("sendMessage", (message)=>{
-    io.emit("newMessage", message)
+    completeInfo = {...message, id: socket.id}
+    io.emit("newMessage", completeInfo)
   })
 });
 
 io.on('connect', (socket)=>{
     socket.emit('oldPlayers', players)
+    socket.emit('yourId', socket.id)
 })
 
 server.listen(3000, '0.0.0.0', () => {

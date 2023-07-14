@@ -11,13 +11,30 @@ var stylew = window.getComputedStyle(canvas);
 canvas.width = parseInt(stylew.width.substring(0,stylew.width.search("px")));
 canvas.height = parseInt(stylew.height.substring(0,stylew.height.search("px")));
 
-
 let sprite = {
   x: Math.floor(Math.random()*200),
   y: Math.floor(Math.random()*100),
-  width: 30,
-  height: 30,
-  speed: 5
+  width: 40,
+  height: 60,
+  speed: 2,
+  direction: "s",
+  name: "João Gomes Da Silva"
+}
+
+let myId
+
+let directionMapping = {
+  "w": 4,
+  "s": 2,
+  "a": 3,
+  "d": 1
+}
+
+let movementHandler = {
+  "w": false,
+  "a": false,
+  "d": false,
+  "s": false,
 }
 
 let players = []
@@ -26,8 +43,12 @@ let players = []
 // ----------------------------------------EVENT LISTENERS--------------------------------------------
 // ----------------------------------------------------------------------------------------------------
 
-canvas.addEventListener("keypress", (event)=>{
-  walk(event.key)
+canvas.addEventListener("keyup", (event)=>{
+  handleInput(event.key, false)
+})
+
+canvas.addEventListener("keydown", (event)=>{
+  handleInput(event.key, true)
 })
 
 campo.addEventListener("keypress", (event)=>{
@@ -37,7 +58,6 @@ campo.addEventListener("keypress", (event)=>{
 // ----------------------------------------------------------------------------------------------------
 // ----------------------------------------SOCKET LISTENERS--------------------------------------------
 // ----------------------------------------------------------------------------------------------------
-
 
 socket.on("peopleMoved", (info)=>{
   let index = players.findIndex(playerInfo=>playerInfo.id === info.id)
@@ -52,81 +72,128 @@ socket.on("peopleMoved", (info)=>{
 })
 
 socket.on("newPlayer", (info)=>{
-  console.log("new player: " + JSON.stringify(info))
-  chat.innerHTML += `<p style='text-align: center; color: white; background-color: ${info.color}'>O Jogador ${info.id} entrou</p>`
+  chat.innerHTML += `<p class="warn" style='color: white; background-color: ${info.color}'>O Jogador ${info.name} entrou</p>`
   addPlayer(info)
 })
 
 socket.on("playerLeft", (id)=>{
   let left = players.find(player=>player.id === id)
-  chat.innerHTML += `<p style='text-align: center; color: red; background-color: ${left.color}'>O Jogador ${id} saiu</p>`
+  chat.innerHTML += `<p class="warn" style='color: red; background-color: ${left.color}'>O Jogador ${left.name} saiu</p>`
   
   let index = players.findIndex(playerInfo=>playerInfo.id === id)
   ctx.clearRect(players[index].x, players[index].y, players[index].width, players[index].height)
+  clearText(players[index])
+
   players.splice(index, 1)
+  remount(sprite)
 })
 
 socket.on("oldPlayers", remountPlayers)
 
 socket.on("newMessage", (message)=>{
   let time = new Date()
-  chat.innerHTML += `<p class="message" style="background-color: ${message.color}">${time.getHours()}:${time.getMinutes()} - ${message.message}</p>`
+  let minutes = time.getMinutes().toString().length < 2 ? "0" + time.getMinutes() : time.getMinutes() 
+  chat.innerHTML += 
+  `<div class="${message.id == myId ? "sended" : "received"}">
+    <div class="message box-shadow">
+    <div class="message-header">
+      <span style="font-weight: 700; color: ${message.color}">${message.name}</span>
+      <span>${time.getHours()}:${minutes}</span>
+    </div>
+    <span class="message-content">${message.message}</span>
+    </div>
+  </div>`
 })
+
+socket.on("yourId", (id)=>{myId = id})
 
 // ----------------------------------------------------------------------------------------------------
 // ---------------------------------------- FUNCTIONS -------------------------------------------------
 // ----------------------------------------------------------------------------------------------------
 
+function startMovementChecker(){
+  setInterval(()=>{
+      let previous = {...sprite}
+      let moved = false
+        if(movementHandler["w"] && !(sprite.y - sprite.speed < 0)){
+          sprite.y -= sprite.speed
+          sprite.direction = "w"
+          moved = true
+        }
+          
+        if(movementHandler["a"] && !(sprite.x - sprite.speed < 0) ){
+          sprite.x -= sprite.speed
+          sprite.direction = "a"
+          moved = true
+        }
+          
+        if(movementHandler["s"] && !(sprite.y + sprite.speed >= canvas.height-sprite.height)){
+          sprite.y += sprite.speed
+          sprite.direction = "s"
+          moved = true
+        }
+          
+        if(movementHandler["d"] && !(sprite.x + sprite.speed >= canvas.width-sprite.width) ){
+          sprite.x += sprite.speed
+          sprite.direction = "d"
+          moved = true
+        } 
+      if(moved){socket.emit("moveMyself", sprite)
+      remount(previous)}
+  }, 20)
+}
+
+
+function drawSprite(sprite){
+  ctx.font = "12px Arial";
+  ctx.fillText(sprite.name, sprite.x+(sprite.width/2)-(ctx.measureText(sprite.name).width/2), sprite.y-4);
+  ctx.drawImage(spriteImg, 50+(113*(directionMapping[sprite.direction]-1)), 30, 100, 160, sprite.x, sprite.y, sprite.width, sprite.height);
+}
+
+function clearSprite(sprite){
+  ctx.clearRect(sprite.x, sprite.y, sprite.width, sprite.height)
+}
+
+function clearText(sprite){
+  ctx.font = "12px Arial";
+  ctx.clearRect(sprite.x+(sprite.width/2)-(ctx.measureText(sprite.name).width/2), sprite.y-14, ctx.measureText(sprite.name).width, 12);
+}
+
+function handleInput(input, state){
+  if (Object.keys(directionMapping).includes(input)) movementHandler[input] = state
+}
+
 function onStart(){
+  
   sprite.color = "#" + Math.floor(Math.random()*16777215).toString(16)
   ctx.fillStyle= sprite.color;
-  ctx.fillRect(sprite.x,sprite.y,sprite.width, sprite.height)
   socket.emit("newPlayer", {...sprite})
-  ctx.imagecSmoothingEnabled = false
-  ctx.drawImage(spriteImg, 50, 30, 100, 160, 40, 40, 50, 80);}
+  drawSprite(sprite)
+  startMovementChecker()
+  }
 
 function addPlayer(sprite, notPush){
   ctx.fillStyle= sprite.color;
-  ctx.fillRect(sprite.x,sprite.y,sprite.width, sprite.height)
   if (!notPush) players.push(sprite)
+  clearText(sprite)
+  clearSprite(sprite)
+  drawSprite(sprite)
 }
 
 function movePlayer(playerSprite, index){
-  ctx.clearRect(players[index].x, players[index].y, players[index].width, players[index].height)
+  clearText(players[index])
+  clearSprite(players[index])
   ctx.fillStyle = playerSprite.color
-  ctx.fillRect(playerSprite.x, playerSprite.y, playerSprite.width, playerSprite.height)
-}
-
-function walk(direction){
-
-  let previous = {...sprite}
-  switch(direction){
-    case "w":
-      if (sprite.y - sprite.speed < 0) break
-      sprite.y -= sprite.speed
-      break
-    case "a":
-      if (sprite.x - sprite.speed < 0) break
-      sprite.x -= sprite.speed
-      break
-    case "s":
-      if (sprite.y + sprite.speed >= canvas.height-sprite.height) break
-      sprite.y += sprite.speed
-      break
-    case "d":
-      if (sprite.x + sprite.speed >= canvas.width-sprite.width) break
-      sprite.x += sprite.speed
-      break
-  }
-  socket.emit("moveMyself", sprite)
-  remount(previous)
+  drawSprite(playerSprite)
 }
 
 function remount(previous){
-  ctx.clearRect(previous.x, previous.y, previous.width, previous.height)
+  clearText(previous)
+  clearSprite(previous)
   remountPlayers(players, true)
   ctx.fillStyle = sprite.color
-  ctx.fillRect(sprite.x, sprite.y, sprite.width, sprite.height)
+  drawSprite(sprite)
+
 }
 
 function remountPlayers(players, notPush){
@@ -136,15 +203,13 @@ function remountPlayers(players, notPush){
 }
 
 function sendMessage(){
-  socket.emit("sendMessage", {color: sprite.color, message: campo.value})
+  socket.emit("sendMessage", {color: sprite.color, message: campo.value, name: sprite.name})
   campo.value = ""
 }
 
 function enterMessage(event){
   if (event.key == "Enter") sendMessage()
 }
-
-
 
 window.onload = onStart
 

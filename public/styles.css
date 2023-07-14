@@ -1,50 +1,118 @@
+body {
+  overflow: hidden;
+  background-image: url(assets/background.png);
+  background-size: cover;
+  font-family: "Helvetica";
+}
+
 #canvas {
   width: 40%;
   height: 80%;
-  border: 1px solid black;
   display: inline;
   /* image-rendering: pixelated; */
 }
 
 #messages {
-  width: 500px;
-  height: 250px;
-  overflow: scroll;
-  border: 1px solid black;
+  height: calc(80% + 30px);
+  overflow: auto;
   margin: 5px auto;
 }
 
 #form {
-width: 100%;}
+width: 100%;
+display: flex;
+justify-content: center;
+align-items: center;
+gap: 10px;
+}
 
 #chat {
-  width: 500px;
-  height: 40px;
+  background-color: rgba(0, 0, 0, 0.362);
+  background-size: cover;
+  width: 30%;
+  height: 80%;
+  border-radius: 20px
 }
 
 .message {
+  color: #FFFFFF;
+  border-radius: 20px;
+  padding: 15px 10px;
+  background-color: #111b21;
+  width: 70%;
+  margin-top: 10px;
+}
+
+.sended {
+  justify-content: flex-end;
+}
+
+.received {
+  justify-content: flex-start;
+}
+
+.sended, .received {
+  display: flex
+}
+
+.message-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.warn {
   font-weight: 700;
+  text-align: center;
 }
 
 #container {
   display: flex;
-  width: 100%;
-  height: 600px;
+  width: 100vw;
+  height: 100vh;
   justify-content: center;
+  align-content: center;
   flex-wrap: wrap;
+  gap: 10px
 }
 
 #campomensagem {
-  width: 80%;
-  height: 50px;
-}
+  width: 70%;
+  height: 40px;
+  border-radius: 20px;
+  border: 0;
+  padding-left: 40px;
+} 
 
 #botaomensagem{
-  width: 15%;
-  height: 50px;
+  width: 10%;
+  height: 6.7vh;
+  border-radius: 20px;
+  padding: 2px 2px 2px 4px;
+  background-color: #FFFFFF;
+}
+
+#botaomensagem:hover{
+  cursor: pointer;
+  background-color: #cbcbcb;
+  transition: 100ms linear;
+  
+}
+
+#send {
+  width: 100%;
 }
 
 #sprite {
-  /* display: none; */
+  display: none;
   width: 200px
+}
+
+.box-shadow {
+  box-shadow:
+  0 2.8px 2.2px rgba(0, 0, 0, 0.034),
+  0 6.7px 5.3px rgba(0, 0, 0, 0.048),
+  0 12.5px 10px rgba(0, 0, 0, 0.06),
+  0 22.3px 17.9px rgba(0, 0, 0, 0.072),
+  0 41.8px 33.4px rgba(0, 0, 0, 0.086),
+  0 100px 80px rgba(0, 0, 0, 0.12)
 }
