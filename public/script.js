@@ -1,6 +1,25 @@
 console.log("cu de grilo")
 
-let socket = io()
+let sprite = {
+  x: Math.floor(Math.random()*200),
+  y: Math.floor(Math.random()*100),
+  width: 40,
+  height: 60,
+  speed: 2,
+  direction: "s",
+  name: "João Gomes Da Silva"
+}
+
+let nickname = localStorage.getItem("name")
+  if(nickname){
+    var socket = io()
+    sprite.name = nickname
+  } else {
+    window.location.replace("/login")
+
+  }
+
+
 
 let campo = document.getElementById("campomensagem")
 let chat = document.getElementById("messages")
@@ -11,15 +30,6 @@ var stylew = window.getComputedStyle(canvas);
 canvas.width = parseInt(stylew.width.substring(0,stylew.width.search("px")));
 canvas.height = parseInt(stylew.height.substring(0,stylew.height.search("px")));
 
-let sprite = {
-  x: Math.floor(Math.random()*200),
-  y: Math.floor(Math.random()*100),
-  width: 40,
-  height: 60,
-  speed: 2,
-  direction: "s",
-  name: "João Gomes Da Silva"
-}
 
 let myId
 
@@ -145,7 +155,10 @@ function startMovementChecker(){
 
 
 function drawSprite(sprite){
-  ctx.font = "12px Arial";
+  ctx.fillStyle = "rgba(0, 0, 0, 0.447)"
+  ctx.font = "bolder 12px Arial";
+  ctx.fillRect(sprite.x+(sprite.width/2)-(ctx.measureText(sprite.name).width/2), sprite.y-14, ctx.measureText(sprite.name).width, 12)
+  ctx.fillStyle = sprite.color
   ctx.fillText(sprite.name, sprite.x+(sprite.width/2)-(ctx.measureText(sprite.name).width/2), sprite.y-4);
   ctx.drawImage(spriteImg, 50+(113*(directionMapping[sprite.direction]-1)), 30, 100, 160, sprite.x, sprite.y, sprite.width, sprite.height);
 }
@@ -155,17 +168,20 @@ function clearSprite(sprite){
 }
 
 function clearText(sprite){
-  ctx.font = "12px Arial";
-  ctx.clearRect(sprite.x+(sprite.width/2)-(ctx.measureText(sprite.name).width/2), sprite.y-14, ctx.measureText(sprite.name).width, 12);
+  ctx.font = "bolder 12px Arial";
+  ctx.clearRect(sprite.x+(sprite.width/2)-(ctx.measureText(sprite.name).width/2)-1, sprite.y-14, ctx.measureText(sprite.name).width+2, 12);
 }
 
 function handleInput(input, state){
   if (Object.keys(directionMapping).includes(input)) movementHandler[input] = state
 }
 
+function randomNumber(){
+  return Math.floor(Math.random()*155)+100
+}
+
 function onStart(){
-  
-  sprite.color = "#" + Math.floor(Math.random()*16777215).toString(16)
+  sprite.color = `rgb(${randomNumber()}, ${randomNumber()}, ${randomNumber()})`
   ctx.fillStyle= sprite.color;
   socket.emit("newPlayer", {...sprite})
   drawSprite(sprite)
@@ -209,6 +225,10 @@ function sendMessage(){
 
 function enterMessage(event){
   if (event.key == "Enter") sendMessage()
+}
+
+function goToLogin(){
+  window.location.replace("/login")
 }
 
 window.onload = onStart

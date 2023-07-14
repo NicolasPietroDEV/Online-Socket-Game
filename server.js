@@ -12,6 +12,10 @@ app.use(express.static("public"))
 app.get('/', (req, res)=>{
     res.sendFile(__dirname + '/index.html');
 })
+
+app.get('/login', (req,res)=>{
+  res.sendFile(__dirname + '/public/login/login.html');
+})
    
 io.on('connection', (socket) => {
   console.log('a user connected: '+ socket.id);
