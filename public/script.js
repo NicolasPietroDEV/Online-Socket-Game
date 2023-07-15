@@ -191,8 +191,6 @@ function onStart(){
 function addPlayer(sprite, notPush){
   ctx.fillStyle= sprite.color;
   if (!notPush) players.push(sprite)
-  clearText(sprite)
-  clearSprite(sprite)
   drawSprite(sprite)
 }
 
@@ -214,13 +212,17 @@ function remount(previous){
 
 function remountPlayers(players, notPush){
   for (let player of players) {
+    clearSprite(player)
+    clearText(player)
+  }
+  for (let player of players) {
     addPlayer(player, notPush)
   }
 }
 
 function sendMessage(){
-  socket.emit("sendMessage", {color: sprite.color, message: campo.value, name: sprite.name})
-  campo.value = ""
+  if(campo.value){socket.emit("sendMessage", {color: sprite.color, message: campo.value, name: sprite.name})
+  campo.value = ""}
 }
 
 function enterMessage(event){

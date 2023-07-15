@@ -84,10 +84,10 @@ gap: 10px;
 } 
 
 #botaomensagem{
-  width: 10%;
-  height: 6.7vh;
+  width: 35px;
+  height: 35px;
   border-radius: 20px;
-  padding: 2px 2px 2px 4px;
+  padding: 2px 0 2px 4px;
   background-color: #FFFFFF;
 }
 
@@ -136,6 +136,5 @@ gap: 10px;
 
 #login > img {
   width: 100%; 
-  /* color: rgba(0, 0, 0, 0.447) */
 }
 
