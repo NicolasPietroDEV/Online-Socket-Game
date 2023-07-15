@@ -1,5 +1,9 @@
 console.log("cu de grilo")
 
+import {log} from "./module.js"
+
+log()
+
 let sprite = {
   x: Math.floor(Math.random()*200),
   y: Math.floor(Math.random()*100),
@@ -63,6 +67,10 @@ canvas.addEventListener("keydown", (event)=>{
 
 campo.addEventListener("keypress", (event)=>{
   enterMessage(event)
+})
+
+canvas.addEventListener("blur", ()=>{
+  stopAllInputs()
 })
 
 // ----------------------------------------------------------------------------------------------------
@@ -130,19 +138,16 @@ function startMovementChecker(){
           sprite.direction = "w"
           moved = true
         }
-          
         if(movementHandler["a"] && !(sprite.x - sprite.speed < 0) ){
           sprite.x -= sprite.speed
           sprite.direction = "a"
           moved = true
         }
-          
         if(movementHandler["s"] && !(sprite.y + sprite.speed >= canvas.height-sprite.height)){
           sprite.y += sprite.speed
           sprite.direction = "s"
           moved = true
         }
-          
         if(movementHandler["d"] && !(sprite.x + sprite.speed >= canvas.width-sprite.width) ){
           sprite.x += sprite.speed
           sprite.direction = "d"
@@ -153,14 +158,28 @@ function startMovementChecker(){
   }, 20)
 }
 
+function stopAllInputs(){
+  for (input of Object.keys(movementHandler)){
+    movementHandler[input] = false
+  }
+}
+
 
 function drawSprite(sprite){
+  drawText(sprite)
+  drawCharacter(sprite)
+}
+
+function drawCharacter(sprite){
+  ctx.drawImage(spriteImg, 50+(113*(directionMapping[sprite.direction]-1)), 30, 100, 160, sprite.x, sprite.y, sprite.width, sprite.height);
+}
+
+function drawText(sprite){
   ctx.fillStyle = "rgba(0, 0, 0, 0.447)"
   ctx.font = "bolder 12px Arial";
   ctx.fillRect(sprite.x+(sprite.width/2)-(ctx.measureText(sprite.name).width/2), sprite.y-14, ctx.measureText(sprite.name).width, 12)
   ctx.fillStyle = sprite.color
   ctx.fillText(sprite.name, sprite.x+(sprite.width/2)-(ctx.measureText(sprite.name).width/2), sprite.y-4);
-  ctx.drawImage(spriteImg, 50+(113*(directionMapping[sprite.direction]-1)), 30, 100, 160, sprite.x, sprite.y, sprite.width, sprite.height);
 }
 
 function clearSprite(sprite){

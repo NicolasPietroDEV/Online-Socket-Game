@@ -138,3 +138,11 @@ gap: 10px;
   width: 100%; 
 }
 
+#messages::-webkit-scrollbar {
+  width: 12px;
+}
+
+#messages::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.497);   
+  border-radius: 20px;       
+}
