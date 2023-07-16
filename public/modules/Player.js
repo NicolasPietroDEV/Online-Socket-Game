@@ -35,7 +35,6 @@ export class Player extends CollisionEntity {
     this.x = newX
     this.game.removeAll()
     this.game.drawAll()
-    this.draw()
   }
 
   /**
@@ -46,7 +45,6 @@ export class Player extends CollisionEntity {
     this.y = newY
     this.game.removeAll()
     this.game.drawAll()
-    this.draw()
   }
 
   /**
@@ -57,7 +55,6 @@ export class Player extends CollisionEntity {
     this.direction = newDirection
     this.game.removeAll()
     this.game.drawAll()
-    this.draw()
   }
 
   get collisionY(){
@@ -66,6 +63,14 @@ export class Player extends CollisionEntity {
 
   get collisionHeight(){
     return this.height/2
+  }
+
+  get collisionX(){
+    return this.x + (this.width/4)
+  }
+
+  get collisionWidth(){
+    return this.width/2
   }
 
   draw() {

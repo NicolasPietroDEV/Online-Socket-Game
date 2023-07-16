@@ -13,7 +13,6 @@ export class Game {
     this.chat = chat
     this.ctx = ctx;
     this.canvas = canvas
-    this.connection = new SocketHandler(this);
     this.mainPlayer = new Player(this, {
       x: Math.floor(Math.random() * 200),
       y: Math.floor(Math.random() * 100),
@@ -23,7 +22,8 @@ export class Game {
       direction: "s",
       color: `rgb(${this.#randomNumber()}, ${this.#randomNumber()}, ${this.#randomNumber()})`,
       name: localStorage.getItem("name") || "João Gomes Da Silva",
-    }, true);
+    });
+    this.connection = new SocketHandler(this);
     this.input = new InputHandler(this, canvas);
     this.input.startMovementChecker()
     this.createWallsCollision()
@@ -52,7 +52,6 @@ export class Game {
     this.removeAll()
     this.entities[index].changePos(info)
     this.drawAll()
-    this.mainPlayer.draw()
   }
 
   addPlayer(info){
@@ -102,7 +101,6 @@ export class Game {
   refreshGame(){
     this.mainPlayer.remove()
     this.updateAll()
-    this.mainPlayer.draw()
   }
 
   turnDevMode(){
