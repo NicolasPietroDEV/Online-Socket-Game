@@ -14,7 +14,7 @@ export class SocketHandler {
             if (index !== -1){
               this.game.movePlayer(info, index)
             } else {
-              this.game.players.push(info)
+              this.game.entities.push(info)
             }
 
           })
@@ -26,10 +26,10 @@ export class SocketHandler {
           
           this.socket.on("playerLeft", (id)=>{
             let left = this.game.findPlayerIndex(id)
-            let player = this.game.players[left]
+            let player = this.game.entities[left]
             this.chat.innerHTML += `<p class="warn" style='color: red; background-color: ${player.color}'>O Jogador ${player.name} saiu</p>`
             player.remove()
-            this.game.players.splice(left, 1)
+            this.game.entities.splice(left, 1)
             this.game.updateAll()
             this.game.mainPlayer.update()
           })

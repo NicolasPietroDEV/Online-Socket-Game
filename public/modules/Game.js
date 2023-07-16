@@ -6,8 +6,6 @@ import { CollisionEntity } from "./CollisionEntity.js";
 import { Wall } from "./Wall.js";
 
 export class Game {
-  players = [];
-  collisors = [];
   entities = [];
   devMode = false;
 
@@ -25,7 +23,7 @@ export class Game {
       direction: "s",
       color: `rgb(${this.#randomNumber()}, ${this.#randomNumber()}, ${this.#randomNumber()})`,
       name: localStorage.getItem("name") || "João Gomes Da Silva",
-    });
+    }, true);
     this.input = new InputHandler(this, canvas);
     this.input.startMovementChecker()
     this.createWallsCollision()
@@ -46,19 +44,19 @@ export class Game {
   }
 
   findPlayerIndex(id){
-    return this.players.findIndex((player)=>player.id==id)
+    return this.entities.findIndex((player)=>player.id==id)
   }
 
   movePlayer(info, index){
     this.mainPlayer.remove()
     this.removeAll()
-    this.players[index].changePos(info)
+    this.entities[index].changePos(info)
     this.drawAll()
     this.mainPlayer.draw()
   }
 
   addPlayer(info){
-    this.players.push(new Player(this, {
+    new Player(this, {
         name: info.name,
         width: info.width,
         height: info.height,
@@ -68,7 +66,7 @@ export class Game {
         id: info.id,
         color: info.color,
         direction: info.direction
-    }))
+    })
   }
 
   createPlayers(oldPlayers){
@@ -79,14 +77,14 @@ export class Game {
 
 
   removeAll(){
-    for (let player of this.players){
-        player.remove()
+    for (let player of this.entities){
+        if(player.remove)player.remove()
     }
   }
 
   drawAll(){
-    for (let player of this.players){
-        player.draw()
+    for (let player of this.entities){
+      if(player.remove)player.draw()
     }
   }
 
@@ -96,7 +94,7 @@ export class Game {
   }
 
   checkAllCollisions(sprite){
-    return !this.collisors.every((collisor)=>!collisor.collidesWith(sprite) || collisor.canPassThrough)
+    return !this.entities.every((entity)=>!entity.collidesWith(sprite) || entity.canPassThrough)
   }
 
   refreshGame(){

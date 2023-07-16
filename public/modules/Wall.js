@@ -7,5 +7,6 @@ export class Wall extends CollisionEntity {
         this.y = info.y;
         this.width = info.width;
         this.height = info.height;
+        this.game.entities.push(this);  
     }
 }

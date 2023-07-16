@@ -23,7 +23,7 @@ export class InputHandler {
               
               canvas.addEventListener("blur", ()=>{
                 this.stopAllInputs()
-
+                console.log(this.game.entities)
               })
         }
 

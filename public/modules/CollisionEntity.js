@@ -3,7 +3,6 @@ export class CollisionEntity {
         this.game = game;
         this.ctx = this.game.ctx;
         this.canPassThrough = canPassThrough
-        this.game.collisors.push(this)
         if(this.game.devMode)console.log("Collision Created")
     }
 

@@ -1,9 +1,8 @@
 import { CollisionEntity } from "./CollisionEntity.js";
 
 export class Player extends CollisionEntity {
-  constructor(game, playerInfo) {
+  constructor(game, playerInfo, notAdd) {
     super(game, false)
-
     this.game = game;
     this.ctx = this.game.ctx;
     this.directionMapping = {
@@ -23,6 +22,7 @@ export class Player extends CollisionEntity {
     this.name = playerInfo.name;
     this.spriteImg = new Image(200,200);
     this.spriteImg.src = "../assets/sprite.png";
+    if(!notAdd)this.game.entities.push(this)
     if(this.game.devMode)console.log("Player created");
     this.draw();
   }
