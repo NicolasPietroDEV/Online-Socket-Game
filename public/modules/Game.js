@@ -83,9 +83,11 @@ export class Game {
   }
 
   drawAll(){
-    for (let player of this.entities){
+    let sortedEntities = this.sortByY()
+    for (let player of sortedEntities){
       if(player.remove)player.draw()
     }
+    return sortedEntities
   }
 
   updateAll(){
@@ -111,5 +113,24 @@ export class Game {
 
   #randomNumber() {
     return Math.floor(Math.random() * 155) + 100;
+  }
+
+  sortByY(){
+    let sorted = [...this.entities]
+    while(true){
+      let swaps = 0    
+    for (let i=0; i<sorted.length-1; i++){
+      if(sorted[i].y>sorted[i+1].y){
+        let pointer = sorted[i]
+        sorted[i] = sorted[i+1]
+        sorted[i+1] = pointer
+        swaps += 1
+      }
+    }
+    if (swaps==0){
+      break
+    }
+  }
+    return sorted
   }
 }

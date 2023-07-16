@@ -60,6 +60,14 @@ export class Player extends CollisionEntity {
     this.draw()
   }
 
+  get collisionY(){
+    return this.y + (this.height/2)
+  }
+
+  get collisionHeight(){
+    return this.height/2
+  }
+
   draw() {
     this.#drawText();
     this.#drawSprite();
