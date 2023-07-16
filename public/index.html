@@ -14,15 +14,15 @@
         <div id="messages"></div>
         <div id="form">
           <input type="text" id="campomensagem" placeholder="Digite sua mensagem ..." >
-          <div id="botaomensagem" onclick="sendMessage()">
+          <div id="botaomensagem">
             <img id="send" src="assets/send.png">
           </div>
         </div>
       </div>
     </div>
-    <span id="login" onclick="goToLogin()"><img src="assets/login.png" alt=""></span>
+    <span id="login"><img src="assets/login.png" alt=""></span>
     <img id="sprite" src="assets/sprite.png">
     <script src="/socket.io/socket.io.js"></script>
-    <script src="./script.js"></script>
+    <script type="module" src="./script.js"></script>
   </body>
 </html>
