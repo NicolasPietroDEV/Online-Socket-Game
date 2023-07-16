@@ -36,22 +36,23 @@ export class InputHandler {
                     } 
                 }
                 let collisionInfo = this.mainPlayer.getCollisionInfo()
-                  if(this.movementHandler["w"] && !this.game.checkAllCollisions({...collisionInfo, y: collisionInfo.y-this.mainPlayer.speed})){
+                let collides = this.game.checkAllCollisions(collisionInfo)
+                  if(this.movementHandler["w"] && (!this.game.checkAllCollisions({...collisionInfo, y: collisionInfo.y-this.mainPlayer.speed})||collides)){
                     this.mainPlayer.setDirection = "w"
                     this.mainPlayer.setY = this.mainPlayer.y - this.mainPlayer.speed
                     moved = true
                   }
-                  if(this.movementHandler["a"] && !this.game.checkAllCollisions({...collisionInfo, x: collisionInfo.x-this.mainPlayer.speed}) ){
+                  if(this.movementHandler["a"] && (!this.game.checkAllCollisions({...collisionInfo, x: collisionInfo.x-this.mainPlayer.speed})||collides )){
                       this.mainPlayer.setDirection = "a"
                     this.mainPlayer.setX = this.mainPlayer.x - this.mainPlayer.speed
                     moved = true
                   }
-                  if(this.movementHandler["s"] && !this.game.checkAllCollisions({...collisionInfo, y: collisionInfo.y+this.mainPlayer.speed}) ){
+                  if(this.movementHandler["s"] && (!this.game.checkAllCollisions({...collisionInfo, y: collisionInfo.y+this.mainPlayer.speed})||collides )){
                       this.mainPlayer.setDirection = "s"
                     this.mainPlayer.setY = this.mainPlayer.y + this.mainPlayer.speed
                     moved = true
                   }
-                  if(this.movementHandler["d"] && !this.game.checkAllCollisions({...collisionInfo, x: collisionInfo.x+this.mainPlayer.speed}) ){
+                  if(this.movementHandler["d"] && (!this.game.checkAllCollisions({...collisionInfo, x: collisionInfo.x+this.mainPlayer.speed})||collides )){
                       this.mainPlayer.setDirection = "d"
                     this.mainPlayer.setX = this.mainPlayer.x + this.mainPlayer.speed
                     moved = true
