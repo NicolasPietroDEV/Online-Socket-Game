@@ -6,10 +6,10 @@ export class Player extends CollisionEntity {
     this.game = game;
     this.ctx = this.game.ctx;
     this.directionMapping = {
-        "w": 4,
+        "w": 0,
+        "a": 1,
         "s": 2,
-        "a": 3,
-        "d": 1
+        "d": 3
       }
     this.id = playerInfo.id;
     this.x = playerInfo.x;
@@ -20,21 +20,24 @@ export class Player extends CollisionEntity {
     this.speed = playerInfo.speed;
     this.color = playerInfo.color;
     this.name = playerInfo.name;
+    this.isMoving = false;
+    this.frame = 1
     this.spriteImg = new Image(200,200);
     this.spriteImg.src = "../assets/sprite.png";
     if(!notAdd)this.game.entities.push(this)
 
     if(this.game.devMode)console.log("Player created");
     this.draw();
+    this.animate()
   }
 
   /**
      * @param {number} newX
      */
   set setX(newX){
-    this.remove()  
+    // this.remove()  
     this.x = newX
-    this.game.removeAll()
+    // this.game.removeAll()
     this.game.drawAll()
   }
 
@@ -42,9 +45,9 @@ export class Player extends CollisionEntity {
      * @param {number} newY
      */
   set setY(newY){
-    this.remove()
+    // this.remove()
     this.y = newY
-    this.game.removeAll()
+    // this.game.removeAll()
     this.game.drawAll()
   }
 
@@ -52,9 +55,9 @@ export class Player extends CollisionEntity {
      * @param {string} newDirection
      */
   set setDirection(newDirection){
-    this.remove()
+    // this.remove()
     this.direction = newDirection
-    this.game.removeAll()
+    // this.game.removeAll()
     this.game.drawAll()
   }
 
@@ -80,13 +83,12 @@ export class Player extends CollisionEntity {
     if(this.game.devMode)this.showBox()
   }
 
-  remove() {
-    this.#clearText();
-    this.#clearSprite()
-  }
+  // remove() {
+  //   this.#clearText();
+  //   this.#clearSprite()
+  // }
 
   update(){
-    this.remove()
     this.draw()
   }
 
@@ -94,6 +96,7 @@ export class Player extends CollisionEntity {
     this.x = info.x;
     this.y = info.y
     this.direction = info.direction
+    this.isMoving = info.isMoving
   }
 
   getPlayerInfo(){
@@ -107,16 +110,36 @@ export class Player extends CollisionEntity {
         height: this.height,
         speed: this.speed,
         name: this.name,
+        isMoving: this.isMoving
     }
   }
 
+  animate(){
+    let animation = setInterval(()=>{
+        if((this.frame+1>3) || !this.isMoving) {this.frame=0} else this.frame++
+      
+    }, 300)
+    
+  }
+
   #drawSprite() {
+    // this.ctx.drawImage(
+    //   this.spriteImg,
+    //   50 + 113 * (this.directionMapping[this.direction] - 1),
+    //   30,
+    //   100,
+    //   160,
+    //   this.x,
+    //   this.y,
+    //   this.width,
+    //   this.height
+    // );
     this.ctx.drawImage(
       this.spriteImg,
-      50 + 113 * (this.directionMapping[this.direction] - 1),
-      30,
-      100,
-      160,
+      this.frame*48,
+      (this.directionMapping[this.direction]*(68)),
+      48,
+      67,
       this.x,
       this.y,
       this.width,

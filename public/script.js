@@ -28,19 +28,8 @@ botao.addEventListener("click", sendMessage);
 
 login.addEventListener("click", goToLogin);
 
-window.addEventListener("resize", adjustCanvas);
-
 function OnStart() {
   GameInstance = new Game(ctx, canvas, chat);
-}
-
-function adjustCanvas() {
-  stylew = window.getComputedStyle(canvas);
-  canvas.width = parseInt(stylew.width.substring(0, stylew.width.search("px")));
-  canvas.height = parseInt(
-    stylew.height.substring(0, stylew.height.search("px"))
-  );
-  GameInstance.refreshGame()
 }
 
 function sendMessage() {

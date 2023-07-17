@@ -35,6 +35,13 @@ export class InputHandler {
                         moved = true
                     } 
                 }
+                if(moved){
+                  this.mainPlayer.isMoving = true
+                } else {
+                  this.mainPlayer.isMoving = false
+                  this.game.refreshGame()
+                  this.game.connection.emitMovement()
+                }
                 let collisionInfo = this.mainPlayer.getCollisionInfo()
                 let collides = this.game.checkAllCollisions(collisionInfo)
                   if(this.movementHandler["w"] && (!this.game.checkAllCollisions({...collisionInfo, y: collisionInfo.y-this.mainPlayer.speed})||collides)){

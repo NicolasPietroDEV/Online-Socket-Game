@@ -9,4 +9,9 @@ export class Wall extends CollisionEntity {
         this.height = info.height;
         this.game.entities.push(this);  
     }
+
+    draw(){
+        if(this.game.devMode){this.showBox()}
+    }
+    remove(){"a"}
 }

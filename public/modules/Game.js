@@ -28,7 +28,11 @@ export class Game {
     this.input.startMovementChecker()
     this.createWallsCollision()
     if(this.devMode)console.log("Game started")
-    this.connection.joinRoom()    
+    this.connection.joinRoom()
+    this.scenery = new Image(240,240) 
+    this.scenery.src = "../assets/map.png"   
+    this.ctx.imageSmoothingEnabled = false
+    this.drawScenery()  
   }
 
   createWallsCollision(){
@@ -42,13 +46,17 @@ export class Game {
     new Wall(this,{x: 0, y: this.canvas.height, width: this.canvas.width, height: 10})
   }
 
+  drawScenery(){
+    this.ctx.drawImage(this.scenery, 0,0, 240,240, 0,0, 500,500)
+  }
+
   findPlayerIndex(id){
     return this.entities.findIndex((player)=>player.id==id)
   }
 
   movePlayer(info, index){
-    this.mainPlayer.remove()
-    this.removeAll()
+    // this.mainPlayer.remove()
+    // this.removeAll()
     this.entities[index].changePos(info)
     this.drawAll()
   }
@@ -77,20 +85,21 @@ export class Game {
 
   removeAll(){
     for (let player of this.entities){
-        if(player.remove)player.remove()
+        if(player.draw)player.remove()
     }
   }
 
   drawAll(){
+    this.drawScenery()
     let sortedEntities = this.sortByY()
     for (let player of sortedEntities){
-      if(player.remove)player.draw()
+      if(player.draw)player.draw()
     }
     return sortedEntities
   }
 
   updateAll(){
-    this.removeAll()
+    // this.removeAll()
     this.drawAll()
   }
 
@@ -99,7 +108,7 @@ export class Game {
   }
 
   refreshGame(){
-    this.mainPlayer.remove()
+    // this.mainPlayer.remove()
     this.updateAll()
   }
 
