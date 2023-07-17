@@ -146,3 +146,15 @@ gap: 10px;
   background-color: rgba(0, 0, 0, 0.497);   
   border-radius: 20px;       
 }
+
+#error {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+#error a{
+  display: block;
+  text-align: center;
+}

@@ -23,6 +23,7 @@ export class Player extends CollisionEntity {
     this.spriteImg = new Image(200,200);
     this.spriteImg.src = "../assets/sprite.png";
     if(!notAdd)this.game.entities.push(this)
+
     if(this.game.devMode)console.log("Player created");
     this.draw();
   }

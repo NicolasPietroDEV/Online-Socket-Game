@@ -3,25 +3,31 @@ export class SocketHandler {
         this.game = game
         this.chat = game.chat
         if(this.game.devMode)console.log("SocketHandler started")
+        this.room = localStorage.getItem("room") || "main"
         this.startConnection()
     }
 
     startConnection(){
-        this.socket = io()
+        this.socket = io('/', {reconnection:false})
 
         this.socket.on("peopleMoved", (info)=>{
+     
             let index = this.game.findPlayerIndex(info.id)
             if (index !== -1){
               this.game.movePlayer(info, index)
             } else {
-              this.game.entities.push(info)
+ 
+              this.game.addPlayer(info)
             }
 
           })
           
           this.socket.on("newPlayer", (info)=>{
+            console.log("um novo player chegou, adicionarei ele")
+            console.log(info)
             this.chat.innerHTML += `<p class="warn" style='color: white; background-color: ${info.color}'>O Jogador ${info.name} entrou</p>`
             this.game.addPlayer(info)
+            this.game.refreshGame()
           })
           
           this.socket.on("playerLeft", (id)=>{
@@ -31,7 +37,6 @@ export class SocketHandler {
             player.remove()
             this.game.entities.splice(left, 1)
             this.game.updateAll()
-            this.game.mainPlayer.update()
           })
           
           this.socket.on("oldPlayers", (oldPlayers)=>this.game.createPlayers(oldPlayers))
@@ -52,18 +57,27 @@ export class SocketHandler {
           })
           
           this.socket.on("yourId", (id)=>{this.game.mainPlayer.id = id})
+          this.socket.on("disconnect", ()=>{
+            window.OnDisconnect()
+          })
           if(this.game.devMode)console.log("Connection established")
     }
 
     emitNewPlayer(){
-        this.socket.emit("newPlayer", this.game.mainPlayer.getPlayerInfo())
+
+        this.socket.emit("newPlayer", {...this.game.mainPlayer.getPlayerInfo(), to: this.room})
     }
 
     emitMovement(){
-        this.socket.emit("moveMyself", this.game.mainPlayer.getPlayerInfo())
+
+        this.socket.emit("moveMyself", {...this.game.mainPlayer.getPlayerInfo(), to: this.room})
     }
 
     emitMessage(message){
-        this.socket.emit("sendMessage", message)
+        this.socket.emit("sendMessage", {...message, to: this.room})
+    }
+
+    joinRoom(room){
+      this.socket.emit("joinRoom", {player: this.game.mainPlayer.getPlayerInfo(), room: room||this.room})
     }
 }

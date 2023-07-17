@@ -5,6 +5,8 @@ if (!nickname) {
   window.location.replace("/login");
 }
 
+let container = document.getElementById("container");
+let error = document.getElementById("error");
 let campo = document.getElementById("campomensagem");
 let botao = document.getElementById("botaomensagem");
 let login = document.getElementById("login");
@@ -67,3 +69,8 @@ function goToLogin() {
 }
 
 window.onload = OnStart;
+
+window.OnDisconnect = function(){
+  container.style.display = "none";
+  error.style.display = "flex"
+}

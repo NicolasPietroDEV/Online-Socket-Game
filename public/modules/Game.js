@@ -28,8 +28,7 @@ export class Game {
     this.input.startMovementChecker()
     this.createWallsCollision()
     if(this.devMode)console.log("Game started")
-    this.connection.emitNewPlayer(this.mainPlayer.getPlayerInfo());
-    
+    this.connection.joinRoom()    
   }
 
   createWallsCollision(){
@@ -72,6 +71,7 @@ export class Game {
     for (let player of oldPlayers){
         this.addPlayer(player)
     }
+    this.updateAll()
   }
 
 
