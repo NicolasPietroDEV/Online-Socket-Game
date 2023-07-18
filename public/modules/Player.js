@@ -25,40 +25,9 @@ export class Player extends CollisionEntity {
     this.spriteImg = new Image(200,200);
     this.spriteImg.src = "../assets/sprite.png";
     if(!notAdd)this.game.entities.push(this)
-
     if(this.game.devMode)console.log("Player created");
     this.draw();
     this.animate()
-  }
-
-  /**
-     * @param {number} newX
-     */
-  set setX(newX){
-    // this.remove()  
-    this.x = newX
-    // this.game.removeAll()
-    this.game.drawAll()
-  }
-
-  /**
-     * @param {number} newY
-     */
-  set setY(newY){
-    // this.remove()
-    this.y = newY
-    // this.game.removeAll()
-    this.game.drawAll()
-  }
-
-  /**
-     * @param {string} newDirection
-     */
-  set setDirection(newDirection){
-    // this.remove()
-    this.direction = newDirection
-    // this.game.removeAll()
-    this.game.drawAll()
   }
 
   get collisionY(){
@@ -82,11 +51,6 @@ export class Player extends CollisionEntity {
     this.#drawSprite();
     if(this.game.devMode)this.showBox()
   }
-
-  // remove() {
-  //   this.#clearText();
-  //   this.#clearSprite()
-  // }
 
   update(){
     this.draw()
@@ -123,17 +87,6 @@ export class Player extends CollisionEntity {
   }
 
   #drawSprite() {
-    // this.ctx.drawImage(
-    //   this.spriteImg,
-    //   50 + 113 * (this.directionMapping[this.direction] - 1),
-    //   30,
-    //   100,
-    //   160,
-    //   this.x,
-    //   this.y,
-    //   this.width,
-    //   this.height
-    // );
     this.ctx.drawImage(
       this.spriteImg,
       this.frame*48,
@@ -161,20 +114,6 @@ export class Player extends CollisionEntity {
       this.name,
       this.x + this.width / 2 - this.ctx.measureText(this.name).width / 2,
       this.y - 4
-    );
-  }
-
-  #clearSprite() {
-    this.ctx.clearRect(this.x, this.y, this.width, this.height);
-  }
-
-  #clearText() {
-    this.ctx.font = "bolder 12px Arial";
-    this.ctx.clearRect(
-      this.x + this.width / 2 - this.ctx.measureText(this.name).width / 2 - 1,
-      this.y - 14,
-      this.ctx.measureText(this.name).width + 2,
-      12
     );
   }
 

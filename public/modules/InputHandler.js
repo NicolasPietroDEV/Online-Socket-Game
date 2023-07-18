@@ -31,7 +31,7 @@ export class InputHandler {
                 let moved = false
                 for (let key of Object.keys(this.movementHandler)){
                     if (this.movementHandler[key]){
-                        this.mainPlayer.setDirection = key
+                        this.mainPlayer.direction = key
                         moved = true
                     } 
                 }
@@ -39,32 +39,33 @@ export class InputHandler {
                   this.mainPlayer.isMoving = true
                 } else {
                   this.mainPlayer.isMoving = false
-                  this.game.refreshGame()
+                  this.game.refreshEntities()
                   this.game.connection.emitMovement()
                 }
                 let collisionInfo = this.mainPlayer.getCollisionInfo()
                 let collides = this.game.checkAllCollisions(collisionInfo)
                   if(this.movementHandler["w"] && (!this.game.checkAllCollisions({...collisionInfo, y: collisionInfo.y-this.mainPlayer.speed})||collides)){
-                    this.mainPlayer.setDirection = "w"
-                    this.mainPlayer.setY = this.mainPlayer.y - this.mainPlayer.speed
+                    this.mainPlayer.y -= this.mainPlayer.speed
+                    this.game.cameraPositionY += this.mainPlayer.speed
                     moved = true
                   }
                   if(this.movementHandler["a"] && (!this.game.checkAllCollisions({...collisionInfo, x: collisionInfo.x-this.mainPlayer.speed})||collides )){
-                      this.mainPlayer.setDirection = "a"
-                    this.mainPlayer.setX = this.mainPlayer.x - this.mainPlayer.speed
+                    this.mainPlayer.x -= this.mainPlayer.speed
+                    this.game.cameraPositionX += this.mainPlayer.speed
                     moved = true
                   }
                   if(this.movementHandler["s"] && (!this.game.checkAllCollisions({...collisionInfo, y: collisionInfo.y+this.mainPlayer.speed})||collides )){
-                      this.mainPlayer.setDirection = "s"
-                    this.mainPlayer.setY = this.mainPlayer.y + this.mainPlayer.speed
+                    this.mainPlayer.y += this.mainPlayer.speed
+                    this.game.cameraPositionY -= this.mainPlayer.speed
                     moved = true
                   }
                   if(this.movementHandler["d"] && (!this.game.checkAllCollisions({...collisionInfo, x: collisionInfo.x+this.mainPlayer.speed})||collides )){
-                      this.mainPlayer.setDirection = "d"
-                    this.mainPlayer.setX = this.mainPlayer.x + this.mainPlayer.speed
+                    this.mainPlayer.x += this.mainPlayer.speed
+                    this.game.cameraPositionX -= this.mainPlayer.speed
                     moved = true
                   } 
                 if(moved){
+                  this.game.refreshEntities()
                     this.game.connection.emitMovement()}
             }, 20)
           }

@@ -27,16 +27,15 @@ export class SocketHandler {
             console.log(info)
             this.chat.innerHTML += `<p class="warn" style='color: white; background-color: ${info.color}'>O Jogador ${info.name} entrou</p>`
             this.game.addPlayer(info)
-            this.game.refreshGame()
+            this.game.refreshEntities()
           })
           
           this.socket.on("playerLeft", (id)=>{
             let left = this.game.findPlayerIndex(id)
             let player = this.game.entities[left]
             this.chat.innerHTML += `<p class="warn" style='color: red; background-color: ${player.color}'>O Jogador ${player.name} saiu</p>`
-            player.remove()
             this.game.entities.splice(left, 1)
-            this.game.updateAll()
+            this.game.refreshEntities()
           })
           
           this.socket.on("oldPlayers", (oldPlayers)=>this.game.createPlayers(oldPlayers))

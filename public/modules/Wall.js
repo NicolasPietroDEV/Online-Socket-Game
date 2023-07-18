@@ -13,5 +13,4 @@ export class Wall extends CollisionEntity {
     draw(){
         if(this.game.devMode){this.showBox()}
     }
-    remove(){"a"}
 }

@@ -7,7 +7,7 @@ import { Wall } from "./Wall.js";
 
 export class Game {
   entities = [];
-  devMode = false;
+  devMode = true;
 
   constructor(ctx, canvas, chat) {
     this.chat = chat
@@ -29,25 +29,31 @@ export class Game {
     this.createWallsCollision()
     if(this.devMode)console.log("Game started")
     this.connection.joinRoom()
-    this.scenery = new Image(240,240) 
-    this.scenery.src = "../assets/map.png"   
+
+    this.sceneryImg = new Image(240,240) 
+    this.sceneryImg.src = "../assets/map.png"   
+    this.sceneryHeight = 500
+    this.sceneryWidth = 500
+    this.cameraPositionX = 0
+    this.cameraPositionY = 0
+
     this.ctx.imageSmoothingEnabled = false
     this.drawScenery()  
   }
 
   createWallsCollision(){
     // left
-    new Wall(this,{x: -10, y: 0, width: 10, height: this.canvas.height})
+    new Wall(this,{x: -10+30, y: 30, width: 10, height: 500-90})
     // top
-    new Wall(this,{x: 0, y: -10, width: this.canvas.width, height: 10})
+    new Wall(this,{x: 30, y: -10+30, width: 500-60, height: 10})
     // right
-    new Wall(this,{x: this.canvas.width, y: 0, width: 10, height: this.canvas.height})
+    new Wall(this,{x: 500-30, y: 30, width: 10, height: 500-90})
     // bottom
-    new Wall(this,{x: 0, y: this.canvas.height, width: this.canvas.width, height: 10})
+    new Wall(this,{x: 30, y: 500-60, width: 500-60, height: 10})
   }
 
   drawScenery(){
-    this.ctx.drawImage(this.scenery, 0,0, 240,240, 0,0, 500,500)
+    this.ctx.drawImage(this.sceneryImg, 0,0, 240,240, 0,0, this.sceneryWidth,this.sceneryWidth)
   }
 
   findPlayerIndex(id){
@@ -55,10 +61,8 @@ export class Game {
   }
 
   movePlayer(info, index){
-    // this.mainPlayer.remove()
-    // this.removeAll()
     this.entities[index].changePos(info)
-    this.drawAll()
+    this.refreshEntities()
   }
 
   addPlayer(info){
@@ -79,17 +83,10 @@ export class Game {
     for (let player of oldPlayers){
         this.addPlayer(player)
     }
-    this.updateAll()
+    this.refreshEntities()
   }
 
-
-  removeAll(){
-    for (let player of this.entities){
-        if(player.draw)player.remove()
-    }
-  }
-
-  drawAll(){
+  refreshEntities(){
     this.drawScenery()
     let sortedEntities = this.sortByY()
     for (let player of sortedEntities){
@@ -98,24 +95,14 @@ export class Game {
     return sortedEntities
   }
 
-  updateAll(){
-    // this.removeAll()
-    this.drawAll()
-  }
-
   checkAllCollisions(sprite){
     return !this.entities.every((entity)=>!entity.collidesWith(sprite) || entity.canPassThrough)
-  }
-
-  refreshGame(){
-    // this.mainPlayer.remove()
-    this.updateAll()
   }
 
   turnDevMode(){
     this.devMode = !this.devMode;
     if(this.devMode){console.log("DevMode started");}else{console.log("DevMode turned off")}
-    this.refreshGame()
+    this.refreshEntities()
 }
 
   #randomNumber() {
