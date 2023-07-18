@@ -5,6 +5,8 @@ if (!nickname) {
   window.location.replace("/login");
 }
 
+let container = document.getElementById("container");
+let error = document.getElementById("error");
 let campo = document.getElementById("campomensagem");
 let botao = document.getElementById("botaomensagem");
 let login = document.getElementById("login");
@@ -26,19 +28,8 @@ botao.addEventListener("click", sendMessage);
 
 login.addEventListener("click", goToLogin);
 
-window.addEventListener("resize", adjustCanvas);
-
 function OnStart() {
   GameInstance = new Game(ctx, canvas, chat);
-}
-
-function adjustCanvas() {
-  stylew = window.getComputedStyle(canvas);
-  canvas.width = parseInt(stylew.width.substring(0, stylew.width.search("px")));
-  canvas.height = parseInt(
-    stylew.height.substring(0, stylew.height.search("px"))
-  );
-  GameInstance.refreshGame()
 }
 
 function sendMessage() {
@@ -67,3 +58,8 @@ function goToLogin() {
 }
 
 window.onload = OnStart;
+
+window.OnDisconnect = function(){
+  container.style.display = "none";
+  error.style.display = "flex"
+}
