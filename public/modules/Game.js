@@ -7,22 +7,31 @@ import { Wall } from "./Wall.js";
 
 export class Game {
   entities = [];
-  devMode = true;
+  devMode = false;
 
   constructor(ctx, canvas, chat) {
     this.chat = chat
     this.ctx = ctx;
     this.canvas = canvas
+
+    this.sceneryImg = new Image(240,240) 
+    this.sceneryImg.src = "../assets/map.png"   
+    this.sceneryHeight = 1000
+    this.sceneryWidth = 1000
+    
+
     this.mainPlayer = new Player(this, {
-      x: Math.floor(Math.random() * 200),
-      y: Math.floor(Math.random() * 100),
+      x: Math.floor(Math.random()*(this.sceneryWidth-400))+200,
+      y: Math.floor(Math.random()*(this.sceneryHeight-400))+200,
       width: 40,
       height: 60,
-      speed: 2,
+      speed: 5,
       direction: "s",
       color: `rgb(${this.#randomNumber()}, ${this.#randomNumber()}, ${this.#randomNumber()})`,
       name: localStorage.getItem("name") || "João Gomes Da Silva",
     });
+    this.cameraPositionX = -(this.mainPlayer.x + this.mainPlayer.width/2 - this.canvas.width/2)
+    this.cameraPositionY = -(this.mainPlayer.y + this.mainPlayer.height/2 - this.canvas.height/2)
     this.connection = new SocketHandler(this);
     this.input = new InputHandler(this, canvas);
     this.input.startMovementChecker()
@@ -30,30 +39,25 @@ export class Game {
     if(this.devMode)console.log("Game started")
     this.connection.joinRoom()
 
-    this.sceneryImg = new Image(240,240) 
-    this.sceneryImg.src = "../assets/map.png"   
-    this.sceneryHeight = 500
-    this.sceneryWidth = 500
-    this.cameraPositionX = 0
-    this.cameraPositionY = 0
+    
 
     this.ctx.imageSmoothingEnabled = false
     this.drawScenery()  
   }
 
   createWallsCollision(){
-    // left
-    new Wall(this,{x: -10+30, y: 30, width: 10, height: 500-90})
-    // top
-    new Wall(this,{x: 30, y: -10+30, width: 500-60, height: 10})
-    // right
-    new Wall(this,{x: 500-30, y: 30, width: 10, height: 500-90})
-    // bottom
-    new Wall(this,{x: 30, y: 500-60, width: 500-60, height: 10})
+    //top
+    new Wall(this,{x: 60, y: 30, width: this.sceneryWidth-120, height: 20})
+    //bottom
+    new Wall(this,{x: 60, y: this.sceneryHeight-120, width: this.sceneryWidth-120, height: 20}) 
+    //right
+    new Wall(this,{x: 30, y: 60, width: 20, height: this.sceneryHeight-180})
+    //left
+    new Wall(this,{x: this.sceneryWidth-50, y: 60, width: 20, height: this.sceneryHeight-180})
   }
 
   drawScenery(){
-    this.ctx.drawImage(this.sceneryImg, 0,0, 240,240, 0,0, this.sceneryWidth,this.sceneryWidth)
+    this.ctx.drawImage(this.sceneryImg, 0,0, 240,240, this.cameraPositionX,this.cameraPositionY, this.sceneryWidth,this.sceneryWidth)
   }
 
   findPlayerIndex(id){

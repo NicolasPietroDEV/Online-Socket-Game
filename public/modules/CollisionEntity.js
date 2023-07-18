@@ -7,7 +7,7 @@ export class CollisionEntity {
   }
 
   get collisionY() {
-    return this.y;
+    return this.y + this.game.cameraPositionY;
   }
 
   get collisionHeight() {
@@ -15,7 +15,7 @@ export class CollisionEntity {
   }
 
   get collisionX() {
-    return this.x;
+    return this.x + this.game.cameraPositionX;
   }
 
   get collisionWidth() {
@@ -47,6 +47,6 @@ export class CollisionEntity {
 
   showBox() {
     this.ctx.fillStyle = "rgba(255, 0, 0, 0.292)";
-    this.ctx.fillRect(this.collisionX, this.collisionY, this.collisionWidth, this.collisionHeight);
+    this.ctx.fillRect(this.collisionX , this.collisionY , this.collisionWidth, this.collisionHeight);
   }
 }

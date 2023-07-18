@@ -31,7 +31,7 @@ export class Player extends CollisionEntity {
   }
 
   get collisionY(){
-    return this.y + (this.height/2)
+    return this.y + (this.height/2) + this.game.cameraPositionY
   }
 
   get collisionHeight(){
@@ -39,7 +39,7 @@ export class Player extends CollisionEntity {
   }
 
   get collisionX(){
-    return this.x + (this.width/4)
+    return this.x + (this.width/4) + this.game.cameraPositionX
   }
 
   get collisionWidth(){
@@ -93,8 +93,8 @@ export class Player extends CollisionEntity {
       (this.directionMapping[this.direction]*(68)),
       48,
       67,
-      this.x,
-      this.y,
+      this.x + this.game.cameraPositionX,
+      this.y + this.game.cameraPositionY,
       this.width,
       this.height
     );
@@ -104,16 +104,16 @@ export class Player extends CollisionEntity {
     this.ctx.fillStyle = "rgba(0, 0, 0, 0.447)";
     this.ctx.font = "bolder 12px Arial";
     this.ctx.fillRect(
-      this.x + this.width / 2 - this.ctx.measureText(this.name).width / 2,
-      this.y - 14,
+      this.x + this.width / 2 - this.ctx.measureText(this.name).width / 2 + this.game.cameraPositionX,
+      this.y - 14 + this.game.cameraPositionY,
       this.ctx.measureText(this.name).width,
       12
     );
     this.ctx.fillStyle = this.color;
     this.ctx.fillText(
       this.name,
-      this.x + this.width / 2 - this.ctx.measureText(this.name).width / 2,
-      this.y - 4
+      this.x + this.width / 2 - this.ctx.measureText(this.name).width / 2 + this.game.cameraPositionX,
+      this.y - 4 + this.game.cameraPositionY
     );
   }
 
