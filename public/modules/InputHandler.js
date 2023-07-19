@@ -35,13 +35,6 @@ export class InputHandler {
                         moved = true
                     } 
                 }
-                if(moved){
-                  this.mainPlayer.isMoving = true
-                } else {
-                  this.mainPlayer.isMoving = false
-                  this.game.refreshEntities()
-                  this.game.connection.emitMovement()
-                }
                 let collisionInfo = this.mainPlayer.getCollisionInfo()
                 let collides = this.game.checkAllCollisions(collisionInfo)
                   if(this.movementHandler["w"] && (!this.game.checkAllCollisions({...collisionInfo, y: collisionInfo.y-this.mainPlayer.speed})||collides)){
@@ -64,9 +57,14 @@ export class InputHandler {
                     this.game.cameraPositionX -= this.mainPlayer.speed
                     moved = true
                   } 
+                let wasPreviouslyMoving = this.mainPlayer.isMoving
                 if(moved){
-                  this.game.refreshEntities()
-                    this.game.connection.emitMovement()}
+                  this.mainPlayer.isMoving = true
+                }else{
+                  this.mainPlayer.isMoving = false
+                }
+                this.game.refreshEntities();
+                    if(wasPreviouslyMoving || this.mainPlayer.isMoving){this.game.connection.emitMovement()}
             }, 20)
           }
           

@@ -1,7 +1,11 @@
 export class CollisionEntity {
-  constructor(game, canPassThrough) {
+  constructor(game, canPassThrough, info) {
     this.game = game;
     this.ctx = this.game.ctx;
+    this.x = info.x
+    this.y = info.y
+    this.height = info.height
+    this.width = info.width
     this.canPassThrough = canPassThrough;
     if (this.game.devMode) console.log("Collision Created");
   }

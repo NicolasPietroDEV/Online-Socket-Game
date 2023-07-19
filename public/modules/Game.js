@@ -2,8 +2,8 @@
 import { InputHandler } from "./InputHandler.js";
 import { Player } from "./Player.js";
 import { SocketHandler } from "./SocketHandler.js";
-import { CollisionEntity } from "./CollisionEntity.js";
 import { Wall } from "./Wall.js";
+import { House } from "./House.js";
 
 export class Game {
   entities = [];
@@ -25,7 +25,7 @@ export class Game {
       y: Math.floor(Math.random()*(this.sceneryHeight-400))+200,
       width: 40,
       height: 60,
-      speed: 5,
+      speed: 4,
       direction: "s",
       color: `rgb(${this.#randomNumber()}, ${this.#randomNumber()}, ${this.#randomNumber()})`,
       name: localStorage.getItem("name") || "João Gomes Da Silva",
@@ -42,7 +42,7 @@ export class Game {
     
 
     this.ctx.imageSmoothingEnabled = false
-    this.drawScenery()  
+    this.refreshEntities()
   }
 
   createWallsCollision(){
@@ -54,6 +54,7 @@ export class Game {
     new Wall(this,{x: 30, y: 60, width: 20, height: this.sceneryHeight-180})
     //left
     new Wall(this,{x: this.sceneryWidth-50, y: 60, width: 20, height: this.sceneryHeight-180})
+    new House(this, {x: 422, y: 30, width:150, height:228})
   }
 
   drawScenery(){
@@ -118,7 +119,7 @@ export class Game {
     while(true){
       let swaps = 0    
     for (let i=0; i<sorted.length-1; i++){
-      if(sorted[i].y>sorted[i+1].y){
+      if((sorted[i].y+sorted[i].height)>(sorted[i+1].y+sorted[i+1].height)){
         let pointer = sorted[i]
         sorted[i] = sorted[i+1]
         sorted[i+1] = pointer
