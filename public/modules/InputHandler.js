@@ -24,6 +24,8 @@ export class InputHandler {
               canvas.addEventListener("blur", ()=>{
                 this.stopAllInputs()
               })
+
+              canvas.addEventListener("mousemove", (evt)=>this.game.devMode && this.game.drawCoords(evt))
         }
 
         startMovementChecker(){
@@ -36,7 +38,7 @@ export class InputHandler {
                     } 
                 }
                 let collisionInfo = this.mainPlayer.getCollisionInfo()
-                let collides = this.game.checkAllCollisions(collisionInfo)
+                let collides = this.game.checkAllCollisions(collisionInfo, true)
                   if(this.movementHandler["w"] && (!this.game.checkAllCollisions({...collisionInfo, y: collisionInfo.y-this.mainPlayer.speed})||collides)){
                     this.mainPlayer.y -= this.mainPlayer.speed
                     this.game.cameraPositionY += this.mainPlayer.speed

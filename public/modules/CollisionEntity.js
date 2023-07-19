@@ -53,4 +53,22 @@ export class CollisionEntity {
     this.ctx.fillStyle = "rgba(255, 0, 0, 0.292)";
     this.ctx.fillRect(this.collisionX , this.collisionY , this.collisionWidth, this.collisionHeight);
   }
+
+  drawSprite(x, y, width, height) {
+    this.ctx.drawImage(
+      this.spriteImg,
+      x,
+      y,
+      width,
+      height,
+      this.x + this.game.cameraPositionX,
+      this.y + this.game.cameraPositionY,
+      this.width,
+      this.height
+    );
+    if (this.game.devMode) {
+      this.showBox();
+    }
+  }
+
 }

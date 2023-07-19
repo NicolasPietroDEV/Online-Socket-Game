@@ -7,7 +7,7 @@ export class House extends CollisionEntity {
         this.ctx = this.game.ctx
         this.spriteImg = new Image(52,78)
         this.spriteImg.src = "assets/house.png"
-        this.game.entities.push(this)
+        this.game.addToGame(this)
     }
 
     get collisionY() {
@@ -19,13 +19,6 @@ export class House extends CollisionEntity {
     }
 
     draw(){
-        this.ctx.drawImage(
-            this.spriteImg, 1,1,50,76, 
-            this.x + this.game.cameraPositionX, 
-            this.y + this.game.cameraPositionY, 
-            this.width, 
-            this.height)
-            if(this.game.devMode){this.showBox()}
-
+            this.drawSprite(1,1,50,76)
     }
 }

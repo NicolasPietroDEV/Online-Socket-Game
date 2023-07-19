@@ -1,4 +1,5 @@
 import { CollisionEntity } from "./CollisionEntity.js";
+// import { Sword } from "./Sword.js";
 
 export class Player extends CollisionEntity {
   constructor(game, playerInfo, notAdd) {
@@ -21,10 +22,11 @@ export class Player extends CollisionEntity {
     this.spriteImg = new Image(200,200);
     this.spriteImg.src = "../assets/sprite.png";
     
-    if(!notAdd)this.game.entities.push(this)
+    if(!notAdd)this.game.addToGame(this)
     if(this.game.devMode)console.log("Player created");
     this.draw();
     this.animate()
+    // new Sword(game, this)
   }
 
   get collisionY(){
@@ -45,8 +47,8 @@ export class Player extends CollisionEntity {
 
   draw() {
     this.#drawText();
-    this.#drawSprite();
-    if(this.game.devMode)this.showBox()
+    this.#drawShadow()
+    this.#drawCharacter();
   }
 
   changePos(info){
@@ -78,18 +80,8 @@ export class Player extends CollisionEntity {
     
   }
 
-  #drawSprite() {
-    this.ctx.drawImage(
-      this.spriteImg,
-      this.frame*48,
-      (this.directionMapping[this.direction]*(68)),
-      48,
-      67,
-      this.x + this.game.cameraPositionX,
-      this.y + this.game.cameraPositionY,
-      this.width,
-      this.height
-    );
+  #drawCharacter() {
+    this.drawSprite(this.frame*48, (this.directionMapping[this.direction]*(68)),48,67)
   }
 
   #drawText() {
@@ -109,5 +101,19 @@ export class Player extends CollisionEntity {
     );
   }
 
+  #drawShadow(){
+    this.ctx.fillStyle = "rgba(0, 0, 0, 0.1)"
+    this.ctx.beginPath();
+    this.ctx.ellipse(
+      this.x+this.width/2 + this.game.cameraPositionX, 
+      this.y+this.height + this.game.cameraPositionY-5, 
+      10,
+      18,
+      90*(Math.PI/180), 
+      0, 
+      2 * Math.PI
+    );
+    this.ctx.fill();
+  }
   
 }

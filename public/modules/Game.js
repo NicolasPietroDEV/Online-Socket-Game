@@ -4,10 +4,11 @@ import { Player } from "./Player.js";
 import { SocketHandler } from "./SocketHandler.js";
 import { Wall } from "./Wall.js";
 import { House } from "./House.js";
+import { Tree } from "./Tree.js";
 
 export class Game {
   entities = [];
-  devMode = false;
+  devMode = true;
 
   constructor(ctx, canvas, chat) {
     this.chat = chat
@@ -21,8 +22,10 @@ export class Game {
     
 
     this.mainPlayer = new Player(this, {
-      x: Math.floor(Math.random()*(this.sceneryWidth-400))+200,
-      y: Math.floor(Math.random()*(this.sceneryHeight-400))+200,
+      // x: Math.floor(Math.random()*(this.sceneryWidth-400))+200,
+      // y: Math.floor(Math.random()*(this.sceneryHeight-400))+200,
+      x: 100,
+      y: 100,
       width: 40,
       height: 60,
       speed: 4,
@@ -54,7 +57,11 @@ export class Game {
     new Wall(this,{x: 30, y: 60, width: 20, height: this.sceneryHeight-180})
     //left
     new Wall(this,{x: this.sceneryWidth-50, y: 60, width: 20, height: this.sceneryHeight-180})
+
     new House(this, {x: 422, y: 30, width:150, height:228})
+    
+    new Tree(this, {x: 200, y: 100, width:120, height: 144})
+    new Tree(this, {x: 670, y: 100, width:120, height: 144})
   }
 
   drawScenery(){
@@ -100,8 +107,21 @@ export class Game {
     return sortedEntities
   }
 
-  checkAllCollisions(sprite){
-    return !this.entities.every((entity)=>!entity.collidesWith(sprite) || entity.canPassThrough)
+  drawCoords(evt) {
+    let rect = this.canvas.getBoundingClientRect() 
+    let scaleX = this.canvas.width / rect.width    
+    let scaleY = this.canvas.height / rect.height
+    let posX = ((evt.clientX - rect.left) * scaleX) 
+    let posY = ((evt.clientY - rect.top) * scaleY) 
+    this.ctx.fillStyle = "yellow"
+    this.ctx.fillText(`X: ${parseInt(posX)- this.cameraPositionX} Y: ${parseInt(posY)- this.cameraPositionY}`, posX, posY)
+  }
+
+  checkAllCollisions(sprite, triggerEvent){
+    return !this.entities.every((entity)=>{
+      if (entity.collidesWith(sprite) && triggerEvent && entity.trigger) entity.trigger()
+      return !entity.collidesWith(sprite) || entity.canPassThrough
+    })
   }
 
   turnDevMode(){
@@ -131,5 +151,9 @@ export class Game {
     }
   }
     return sorted
+  }
+
+  addToGame(entity){
+    this.entities.push(entity)
   }
 }

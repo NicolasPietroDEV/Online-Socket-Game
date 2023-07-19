@@ -23,8 +23,6 @@ export class SocketHandler {
           })
           
           this.socket.on("newPlayer", (info)=>{
-            console.log("um novo player chegou, adicionarei ele")
-            console.log(info)
             this.chat.innerHTML += `<p class="warn" style='color: white; background-color: ${info.color}'>O Jogador ${info.name} entrou</p>`
             this.game.addPlayer(info)
             this.game.refreshEntities()
