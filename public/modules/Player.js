@@ -2,7 +2,7 @@ import { CollisionEntity } from "./CollisionEntity.js";
 
 export class Player extends CollisionEntity {
   constructor(game, playerInfo, notAdd) {
-    super(game, false)
+    super(game, false, playerInfo)
     this.game = game;
     this.ctx = this.game.ctx;
     this.directionMapping = {
@@ -12,10 +12,6 @@ export class Player extends CollisionEntity {
         "d": 3
       }
     this.id = playerInfo.id;
-    this.x = playerInfo.x;
-    this.y = playerInfo.y;
-    this.width = playerInfo.width;
-    this.height = playerInfo.height;
     this.direction = playerInfo.direction;
     this.speed = playerInfo.speed;
     this.color = playerInfo.color;
@@ -24,6 +20,7 @@ export class Player extends CollisionEntity {
     this.frame = 1
     this.spriteImg = new Image(200,200);
     this.spriteImg.src = "../assets/sprite.png";
+    
     if(!notAdd)this.game.entities.push(this)
     if(this.game.devMode)console.log("Player created");
     this.draw();
@@ -52,10 +49,6 @@ export class Player extends CollisionEntity {
     if(this.game.devMode)this.showBox()
   }
 
-  update(){
-    this.draw()
-  }
-
   changePos(info){
     this.x = info.x;
     this.y = info.y
@@ -79,9 +72,8 @@ export class Player extends CollisionEntity {
   }
 
   animate(){
-    let animation = setInterval(()=>{
+    setInterval(()=>{
         if((this.frame+1>3) || !this.isMoving) {this.frame=0} else this.frame++
-      
     }, 300)
     
   }
