@@ -8,7 +8,7 @@ import { Tree } from "./Tree.js";
 
 export class Game {
   entities = [];
-  devMode = true;
+  devMode = false;
 
   constructor(ctx, canvas, chat) {
     this.chat = chat
