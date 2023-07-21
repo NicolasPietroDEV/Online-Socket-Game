@@ -14,6 +14,15 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
 });
 
+app.get("/rooms", (req, res) =>{
+  res.send(Object.keys(rooms).map((room)=>{
+    return {
+      name: room,
+      players: rooms[room].players.length
+    }
+  }))
+})
+
 app.get("/login", (req, res) => {
   res.sendFile(__dirname + "/public/login/login.html");
 });
@@ -31,6 +40,11 @@ io.on("connection", (socket) => {
     rooms[info.to].players.push(completeInfo)
     socket.broadcast.to(info.to).emit("newPlayer", completeInfo);
   });
+
+  socket.on("useWeapon", (info)=>{
+    completeInfo = { ...info, id: socket.id };
+    socket.broadcast.to(info.to).emit("useWeapon", completeInfo)
+  })
 
   socket.on("disconnect", () => {
     players.splice(

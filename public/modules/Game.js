@@ -5,10 +5,11 @@ import { SocketHandler } from "./SocketHandler.js";
 import { Wall } from "./Wall.js";
 import { House } from "./House.js";
 import { Tree } from "./Tree.js";
+import { Sword } from "./Sword.js";
 
 export class Game {
   entities = [];
-  devMode = false;
+  devMode = true;
 
   constructor(ctx, canvas, chat) {
     this.chat = chat
@@ -24,8 +25,8 @@ export class Game {
     this.mainPlayer = new Player(this, {
       // x: Math.floor(Math.random()*(this.sceneryWidth-400))+200,
       // y: Math.floor(Math.random()*(this.sceneryHeight-400))+200,
-      x: 100,
-      y: 100,
+      x: 476,
+      y: 280,
       width: 40,
       height: 60,
       speed: 4,
@@ -99,12 +100,17 @@ export class Game {
   }
 
   refreshEntities(){
+    this.clearScreen()
     this.drawScenery()
     let sortedEntities = this.sortByY()
     for (let player of sortedEntities){
       if(player.draw)player.draw()
     }
     return sortedEntities
+  }
+
+  clearScreen(){
+    this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height)
   }
 
   drawCoords(evt) {
@@ -136,10 +142,18 @@ export class Game {
 
   sortByY(){
     let sorted = [...this.entities]
+    let weapons = []
+    sorted.forEach((item, index)=>{
+      if (item.priorize) {
+        weapons.push(item)
+        sorted.splice(index, 1)
+      }
+      
+    })
     while(true){
       let swaps = 0    
     for (let i=0; i<sorted.length-1; i++){
-      if((sorted[i].y+sorted[i].height)>(sorted[i+1].y+sorted[i+1].height)){
+      if(((sorted[i].y+sorted[i].height)>(sorted[i+1].y+sorted[i+1].height))){
         let pointer = sorted[i]
         sorted[i] = sorted[i+1]
         sorted[i+1] = pointer
@@ -150,10 +164,15 @@ export class Game {
       break
     }
   }
-    return sorted
+    return [...sorted, ...weapons]
   }
 
   addToGame(entity){
     this.entities.push(entity)
+  }
+
+  removeFromGame(entity){
+    let index = this.entities.findIndex((gameEntity) => gameEntity == entity)
+    this.entities.splice(index,1)
   }
 }

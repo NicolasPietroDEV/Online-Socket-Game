@@ -14,10 +14,12 @@
             </div>
             <div class="field">
                 <p>Sala:</p>
-                <input type="text" class="input" id="room" maxlength="15" placeholder="Digite o código">
+                <input type="text" list="rooms" class="input" id="room" maxlength="15" placeholder="Digite o código">
+                <datalist id="rooms"></datalist>
             </div>
 
         <button id="enter" onclick="enter()">Entrar</button>
+
     </div>
     <script src="login.js"></script>
 </body>

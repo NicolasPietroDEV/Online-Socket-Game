@@ -35,6 +35,12 @@ export class SocketHandler {
             this.game.entities.splice(left, 1)
             this.game.refreshEntities()
           })
+
+          this.socket.on("useWeapon", (info)=>{
+            let playerIndex = this.game.findPlayerIndex(info.id)
+            let player = this.game.entities[playerIndex]
+            player.weapons[0].use()
+          })
           
           this.socket.on("oldPlayers", (oldPlayers)=>this.game.createPlayers(oldPlayers))
           
@@ -76,5 +82,9 @@ export class SocketHandler {
 
     joinRoom(room){
       this.socket.emit("joinRoom", {player: this.game.mainPlayer.getPlayerInfo(), room: room||this.room})
+    }
+
+    emitAttack(){
+      this.socket.emit("useWeapon", {to: this.room})
     }
 }

@@ -1,5 +1,6 @@
 export class CollisionEntity {
-  constructor(game, canPassThrough, info) {
+  constructor(game, canPassThrough, info, priorize) {
+    this.priorize = priorize
     this.game = game;
     this.ctx = this.game.ctx;
     this.x = info.x

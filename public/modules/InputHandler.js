@@ -7,6 +7,10 @@ export class InputHandler {
                 "d": false,
                 "s": false,
             }
+
+            this.otherKeys = {
+              "k": ()=>{this.game.mainPlayer.weapons[0].use();this.game.connection.emitAttack()}
+            }
             this.mainPlayer = this.game.mainPlayer
             this.canvas = this.game.canvas
 
@@ -41,22 +45,22 @@ export class InputHandler {
                 let collides = this.game.checkAllCollisions(collisionInfo, true)
                   if(this.movementHandler["w"] && (!this.game.checkAllCollisions({...collisionInfo, y: collisionInfo.y-this.mainPlayer.speed})||collides)){
                     this.mainPlayer.y -= this.mainPlayer.speed
-                    this.game.cameraPositionY += this.mainPlayer.speed
+                    if(this.game.cameraPositionY<0 && ((this.game.mainPlayer.y+this.game.cameraPositionY)<(this.game.canvas.height/2 - this.mainPlayer.height/2))) this.game.cameraPositionY += this.mainPlayer.speed
                     moved = true
                   }
                   if(this.movementHandler["a"] && (!this.game.checkAllCollisions({...collisionInfo, x: collisionInfo.x-this.mainPlayer.speed})||collides )){
                     this.mainPlayer.x -= this.mainPlayer.speed
-                    this.game.cameraPositionX += this.mainPlayer.speed
+                    if(this.game.cameraPositionX<0 && ((this.game.mainPlayer.x+this.game.cameraPositionX)<(this.game.canvas.width/2 - this.mainPlayer.width/2)))this.game.cameraPositionX += this.mainPlayer.speed
                     moved = true
                   }
                   if(this.movementHandler["s"] && (!this.game.checkAllCollisions({...collisionInfo, y: collisionInfo.y+this.mainPlayer.speed})||collides )){
                     this.mainPlayer.y += this.mainPlayer.speed
-                    this.game.cameraPositionY -= this.mainPlayer.speed
+                    if((-this.game.cameraPositionY)<this.game.canvas.height && (this.game.mainPlayer.y>(this.game.canvas.height/2 - this.mainPlayer.height/2)))this.game.cameraPositionY -= this.mainPlayer.speed
                     moved = true
                   }
                   if(this.movementHandler["d"] && (!this.game.checkAllCollisions({...collisionInfo, x: collisionInfo.x+this.mainPlayer.speed})||collides )){
                     this.mainPlayer.x += this.mainPlayer.speed
-                    this.game.cameraPositionX -= this.mainPlayer.speed
+                    if((-this.game.cameraPositionX)<this.game.canvas.width && (this.game.mainPlayer.x>(this.game.canvas.width/2 - this.mainPlayer.width/2)))this.game.cameraPositionX -= this.mainPlayer.speed
                     moved = true
                   } 
                 let wasPreviouslyMoving = this.mainPlayer.isMoving
@@ -77,6 +81,7 @@ export class InputHandler {
           }
         
         handleKeyPressing(input, state){
-            if (Object.keys(this.movementHandler).includes(input)) this.movementHandler[input] = state
+            if (Object.keys(this.movementHandler).includes(input) ) this.movementHandler[input] = state
+            if (Object.keys(this.otherKeys).includes(input) && state) this.otherKeys[input]()
           }
 }

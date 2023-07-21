@@ -1,9 +1,10 @@
 import { CollisionEntity } from "./CollisionEntity.js";
-// import { Sword } from "./Sword.js";
+import { Sword } from "./Sword.js";
 
 export class Player extends CollisionEntity {
   constructor(game, playerInfo, notAdd) {
     super(game, false, playerInfo)
+    this.weapons = []
     this.game = game;
     this.ctx = this.game.ctx;
     this.directionMapping = {
@@ -26,7 +27,7 @@ export class Player extends CollisionEntity {
     if(this.game.devMode)console.log("Player created");
     this.draw();
     this.animate()
-    // new Sword(game, this)
+    new Sword(game, this)
   }
 
   get collisionY(){
@@ -114,6 +115,10 @@ export class Player extends CollisionEntity {
       2 * Math.PI
     );
     this.ctx.fill();
+  }
+
+  addWeapon(weapon){
+    this.weapons.push(weapon)
   }
   
 }
