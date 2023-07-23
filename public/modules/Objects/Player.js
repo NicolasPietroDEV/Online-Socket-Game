@@ -1,5 +1,5 @@
 import { CollisionEntity } from "./CollisionEntity.js";
-import { Sword } from "./Sword.js";
+import { Sword } from "../Weapons/Sword.js";
 
 export class Player extends CollisionEntity {
   constructor(game, playerInfo, notAdd) {
@@ -18,8 +18,12 @@ export class Player extends CollisionEntity {
     this.speed = playerInfo.speed;
     this.color = playerInfo.color;
     this.name = playerInfo.name;
+    this.canMove = true
+    this.canTakeDamage = true
     this.isMoving = false;
+    this.blinkState = true
     this.frame = 1
+    this.life = playerInfo.life
     this.spriteImg = new Image(200,200);
     this.spriteImg.src = "../assets/sprite.png";
     
@@ -49,7 +53,8 @@ export class Player extends CollisionEntity {
   draw() {
     this.#drawText();
     this.#drawShadow()
-    this.#drawCharacter();
+    this.blinkState && this.#drawCharacter()
+    this.#drawLifeBar()
   }
 
   changePos(info){
@@ -57,6 +62,7 @@ export class Player extends CollisionEntity {
     this.y = info.y
     this.direction = info.direction
     this.isMoving = info.isMoving
+    this.blinkState = info.blinkState
   }
 
   getPlayerInfo(){
@@ -70,7 +76,9 @@ export class Player extends CollisionEntity {
         height: this.height,
         speed: this.speed,
         name: this.name,
-        isMoving: this.isMoving
+        isMoving: this.isMoving,
+        life: this.life,
+        blinkState: this.blinkState
     }
   }
 
@@ -81,8 +89,50 @@ export class Player extends CollisionEntity {
     
   }
 
+  startBlinking(){
+    let counter = 0
+    let blinkAnimation = setInterval(()=>{
+      if(counter%5 == 0){this.blinkState = !this.blinkState}
+      counter++
+      if(this.canMove){clearInterval(blinkAnimation); this.blinkState = true; this.game.connection.emitMovement()}
+    })
+  }
+
+  respawn(){
+    this.life = 10
+    this.changePos({
+      x: this.game.spawn.x,
+      y: this.game.spawn.y,
+      direction: "s"
+    })
+
+  }
+
   #drawCharacter() {
     this.drawSprite(this.frame*48, (this.directionMapping[this.direction]*(68)),48,67)
+  }
+
+  #drawLifeBar(){
+    this.ctx.fillStyle = 'red'
+    this.ctx.fillRect(
+      this.x + this.game.cameraPositionX,
+      this.y - 10 + this.game.cameraPositionY,
+      this.life * 4.5,
+      8
+    );
+    let lifeBar = new Image(30, 10)
+    lifeBar.src = "../assets/lifebar.png"
+    this.ctx.drawImage(
+      lifeBar,
+      1,
+      1,
+      29,
+      9,
+      this.x + this.game.cameraPositionX + this.width/2 - 29,
+      this.y - 14 + this.game.cameraPositionY,
+      29*2,
+      9*2
+    )
   }
 
   #drawText() {
@@ -90,7 +140,7 @@ export class Player extends CollisionEntity {
     this.ctx.font = "bolder 12px Arial";
     this.ctx.fillRect(
       this.x + this.width / 2 - this.ctx.measureText(this.name).width / 2 + this.game.cameraPositionX,
-      this.y - 14 + this.game.cameraPositionY,
+      this.y - 24 + this.game.cameraPositionY,
       this.ctx.measureText(this.name).width,
       12
     );
@@ -98,7 +148,7 @@ export class Player extends CollisionEntity {
     this.ctx.fillText(
       this.name,
       this.x + this.width / 2 - this.ctx.measureText(this.name).width / 2 + this.game.cameraPositionX,
-      this.y - 4 + this.game.cameraPositionY
+      this.y - 14 + this.game.cameraPositionY
     );
   }
 

@@ -35,7 +35,7 @@ export class InputHandler {
         startMovementChecker(){
             setInterval(()=>{
                 let moved = false
-                for (let key of Object.keys(this.movementHandler)){
+                if(this.mainPlayer.canMove){for (let key of Object.keys(this.movementHandler)){
                     if (this.movementHandler[key]){
                         this.mainPlayer.direction = key
                         moved = true
@@ -62,7 +62,7 @@ export class InputHandler {
                     this.mainPlayer.x += this.mainPlayer.speed
                     if((-this.game.cameraPositionX)<this.game.canvas.width && (this.game.mainPlayer.x>(this.game.canvas.width/2 - this.mainPlayer.width/2)))this.game.cameraPositionX -= this.mainPlayer.speed
                     moved = true
-                  } 
+                  } }
                 let wasPreviouslyMoving = this.mainPlayer.isMoving
                 if(moved){
                   this.mainPlayer.isMoving = true

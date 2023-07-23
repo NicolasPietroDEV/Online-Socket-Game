@@ -6,7 +6,8 @@ export class Wall extends CollisionEntity {
         this.game.entities.push(this);  
     }
 
-    draw(){
+    draw(){        
         if(this.game.devMode){this.showBox()}
     }
+
 }

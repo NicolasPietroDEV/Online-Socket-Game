@@ -87,4 +87,5 @@ export class SocketHandler {
     emitAttack(){
       this.socket.emit("useWeapon", {to: this.room})
     }
+
 }

@@ -1,15 +1,14 @@
 "use strict";
-import { InputHandler } from "./InputHandler.js";
-import { Player } from "./Player.js";
-import { SocketHandler } from "./SocketHandler.js";
-import { Wall } from "./Wall.js";
-import { House } from "./House.js";
-import { Tree } from "./Tree.js";
-import { Sword } from "./Sword.js";
+import { InputHandler } from "./Helpers/InputHandler.js";
+import { Player } from "./Objects/Player.js";
+import { SocketHandler } from "./Helpers/SocketHandler.js";
+import { Wall } from "./Objects/Wall.js";
+import { House } from "./Objects/House.js";
+import { Tree } from "./Objects/Tree.js";
 
 export class Game {
   entities = [];
-  devMode = true;
+  devMode = false;
 
   constructor(ctx, canvas, chat) {
     this.chat = chat
@@ -21,15 +20,18 @@ export class Game {
     this.sceneryHeight = 1000
     this.sceneryWidth = 1000
     
+    this.spawn = {
+      x: 476,
+      y: 280
+    }
 
     this.mainPlayer = new Player(this, {
-      // x: Math.floor(Math.random()*(this.sceneryWidth-400))+200,
-      // y: Math.floor(Math.random()*(this.sceneryHeight-400))+200,
       x: 476,
       y: 280,
       width: 40,
       height: 60,
       speed: 4,
+      life: 10,
       direction: "s",
       color: `rgb(${this.#randomNumber()}, ${this.#randomNumber()}, ${this.#randomNumber()})`,
       name: localStorage.getItem("name") || "João Gomes Da Silva",
@@ -42,22 +44,24 @@ export class Game {
     this.createWallsCollision()
     if(this.devMode)console.log("Game started")
     this.connection.joinRoom()
-
-    
-
     this.ctx.imageSmoothingEnabled = false
     this.refreshEntities()
   }
 
+  resetCamera(){
+    this.cameraPositionX = -(this.mainPlayer.x + this.mainPlayer.width/2 - this.canvas.width/2)
+    this.cameraPositionY = -(this.mainPlayer.y + this.mainPlayer.height/2 - this.canvas.height/2)
+  }
+
   createWallsCollision(){
     //top
-    new Wall(this,{x: 60, y: 30, width: this.sceneryWidth-120, height: 20})
+    new Wall(this,{x: 60, y: 10, width: this.sceneryWidth-120, height: 40})
     //bottom
-    new Wall(this,{x: 60, y: this.sceneryHeight-120, width: this.sceneryWidth-120, height: 20}) 
+    new Wall(this,{x: 60, y: this.sceneryHeight-120, width: this.sceneryWidth-120, height: 40}) 
     //right
-    new Wall(this,{x: 30, y: 60, width: 20, height: this.sceneryHeight-180})
+    new Wall(this,{x: 10, y: 60, width: 40, height: this.sceneryHeight-180})
     //left
-    new Wall(this,{x: this.sceneryWidth-50, y: 60, width: 20, height: this.sceneryHeight-180})
+    new Wall(this,{x: this.sceneryWidth-50, y: 60, width: 40, height: this.sceneryHeight-180})
 
     new House(this, {x: 422, y: 30, width:150, height:228})
     
@@ -75,6 +79,7 @@ export class Game {
 
   movePlayer(info, index){
     this.entities[index].changePos(info)
+    this.entities[index].life = info.life
     this.refreshEntities()
   }
 
@@ -85,6 +90,7 @@ export class Game {
         height: info.height,
         speed: info.speed,
         x: info.x,
+        life: info.life,
         y: info.y,
         id: info.id,
         color: info.color,
