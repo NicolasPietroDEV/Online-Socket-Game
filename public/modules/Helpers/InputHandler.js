@@ -9,7 +9,13 @@ export class InputHandler {
             }
 
             this.otherKeys = {
-              "k": ()=>{this.game.mainPlayer.weapons[0].use();this.game.connection.emitAttack()}
+              "k": ()=>{this.game.mainPlayer.weapons[0].use();this.game.connection.emitWeaponUsed(0, true)},
+              "j": (state)=>{
+                if(state){this.game.mainPlayer.weapons[1].use();this.game.connection.emitWeaponUsed(1, true)} else {
+                  this.game.mainPlayer.weapons[1].stop()
+                  this.game.connection.emitWeaponUsed(1, false)
+                }
+              }
             }
             this.mainPlayer = this.game.mainPlayer
             this.canvas = this.game.canvas
@@ -36,7 +42,7 @@ export class InputHandler {
             setInterval(()=>{
                 let moved = false
                 if(this.mainPlayer.canMove){for (let key of Object.keys(this.movementHandler)){
-                    if (this.movementHandler[key]){
+                    if (this.movementHandler[key] && !this.mainPlayer.immuneFrom){
                         this.mainPlayer.direction = key
                         moved = true
                     } 
@@ -82,6 +88,6 @@ export class InputHandler {
         
         handleKeyPressing(input, state){
             if (Object.keys(this.movementHandler).includes(input) ) this.movementHandler[input] = state
-            if (Object.keys(this.otherKeys).includes(input) && state) this.otherKeys[input]()
+            if (Object.keys(this.otherKeys).includes(input)) this.otherKeys[input](state)
           }
 }

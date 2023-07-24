@@ -31,6 +31,7 @@ export class SocketHandler {
           this.socket.on("playerLeft", (id)=>{
             let left = this.game.findPlayerIndex(id)
             let player = this.game.entities[left]
+            player.weapons.forEach((weapon)=>{weapon.stop && weapon.stop()})
             this.chat.innerHTML += `<p class="warn" style='color: red; background-color: ${player.color}'>O Jogador ${player.name} saiu</p>`
             this.game.entities.splice(left, 1)
             this.game.refreshEntities()
@@ -39,7 +40,7 @@ export class SocketHandler {
           this.socket.on("useWeapon", (info)=>{
             let playerIndex = this.game.findPlayerIndex(info.id)
             let player = this.game.entities[playerIndex]
-            player.weapons[0].use()
+            if(info.state){player.weapons[info.weapon].use()} else {player.weapons[info.weapon].stop && player.weapons[info.weapon].stop()}
           })
           
           this.socket.on("oldPlayers", (oldPlayers)=>this.game.createPlayers(oldPlayers))
@@ -57,6 +58,7 @@ export class SocketHandler {
               <span class="message-content">${message.message}</span>
               </div>
             </div>`
+            this.chat.scrollTop = this.chat.scrollHeight
           })
           
           this.socket.on("yourId", (id)=>{this.game.mainPlayer.id = id})
@@ -84,8 +86,8 @@ export class SocketHandler {
       this.socket.emit("joinRoom", {player: this.game.mainPlayer.getPlayerInfo(), room: room||this.room})
     }
 
-    emitAttack(){
-      this.socket.emit("useWeapon", {to: this.room})
+    emitWeaponUsed(index, state){
+      this.socket.emit("useWeapon", {to: this.room, weapon: index, state: state})
     }
 
 }

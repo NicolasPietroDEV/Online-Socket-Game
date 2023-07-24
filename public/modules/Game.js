@@ -131,8 +131,8 @@ export class Game {
 
   checkAllCollisions(sprite, triggerEvent){
     return !this.entities.every((entity)=>{
-      if (entity.collidesWith(sprite) && triggerEvent && entity.trigger) entity.trigger()
-      return !entity.collidesWith(sprite) || entity.canPassThrough
+      if (((entity.collidesWith||false) && entity.collidesWith(sprite)) && triggerEvent && entity.trigger) entity.trigger()
+      return !(entity.collidesWith && entity.collidesWith(sprite)) || entity.canPassThrough
     })
   }
 
@@ -179,6 +179,7 @@ export class Game {
 
   removeFromGame(entity){
     let index = this.entities.findIndex((gameEntity) => gameEntity == entity)
-    this.entities.splice(index,1)
+    if (index == -1) return
+    if(this.entities[index]==entity){this.entities.splice(index,1)} else {this.refreshEntities(entity)}
   }
 }

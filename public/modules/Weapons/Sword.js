@@ -209,7 +209,7 @@ export class Sword extends CollisionEntity {
   }
 
   trigger() {
-    if (this.game.mainPlayer.canTakeDamage) {
+    if (this.game.mainPlayer.canTakeDamage && (this.game.mainPlayer.immuneFrom != this.user.direction)) {
       this.game.mainPlayer.canTakeDamage = false;
       this.game.mainPlayer.canMove = false;
       this.game.mainPlayer.startBlinking()
@@ -265,7 +265,7 @@ export class Sword extends CollisionEntity {
     this.animate();
     if (
       this.game.entities.findIndex((entity) => {
-        return entity instanceof Sword && entity.user == this.user;
+        return entity.use && entity.user == this.user;
       }) == -1 &&
       this.canUse
     ) {

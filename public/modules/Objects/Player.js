@@ -1,5 +1,6 @@
 import { CollisionEntity } from "./CollisionEntity.js";
 import { Sword } from "../Weapons/Sword.js";
+import { Shield } from "../Weapons/Shield.js";
 
 export class Player extends CollisionEntity {
   constructor(game, playerInfo, notAdd) {
@@ -24,6 +25,7 @@ export class Player extends CollisionEntity {
     this.blinkState = true
     this.frame = 1
     this.life = playerInfo.life
+    this.immuneFrom = false
     this.spriteImg = new Image(200,200);
     this.spriteImg.src = "../assets/sprite.png";
     
@@ -32,6 +34,7 @@ export class Player extends CollisionEntity {
     this.draw();
     this.animate()
     new Sword(game, this)
+    new Shield(game, this)
   }
 
   get collisionY(){
