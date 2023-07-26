@@ -14,14 +14,14 @@ export class Sword extends CollisionEntity {
       false
     );
     this.user = user;
-    this.game = game;
-    this.ctx = this.game.ctx;
     this.spriteMap = {
       w: 0,
       a: 1,
       s: 2,
       d: 3,
     };
+    this.abovePlayer = false
+
     this.frame = 0;
     this.spriteImg = new Image(70, 100);
     this.canUse = true;
@@ -35,6 +35,7 @@ export class Sword extends CollisionEntity {
   get collisionX() {
     switch (this.user.direction) {
       case "w":
+      case "s":
         return (
           this.user.x +
           this.width / 4 -
@@ -43,13 +44,6 @@ export class Sword extends CollisionEntity {
         );
       case "a":
         return this.user.x - this.collisionWidth + this.game.cameraPositionX;
-      case "s":
-        return (
-          this.user.x +
-          this.width / 4 -
-          this.collisionWidth / 4 +
-          this.game.cameraPositionX
-        );
       case "d":
         return this.user.x + this.user.width + this.game.cameraPositionX;
     }
@@ -62,6 +56,7 @@ export class Sword extends CollisionEntity {
           this.user.y - this.collisionHeight / 2 + this.game.cameraPositionY
         );
       case "a":
+      case "d":
         return (
           this.user.y +
           this.user.height / 2 -
@@ -70,13 +65,6 @@ export class Sword extends CollisionEntity {
         );
       case "s":
         return this.user.y + this.user.height + this.game.cameraPositionY;
-      case "d":
-        return (
-          this.user.y +
-          this.user.height / 2 -
-          this.collisionWidth / 2 +
-          this.game.cameraPositionY
-        );
     }
   }
 
@@ -121,114 +109,10 @@ export class Sword extends CollisionEntity {
         return this.collisionY;
     }
   }
-
-  takeKnockbackTo(knockback, direction, parts) {
-    let initial = this.game.mainPlayer.getPlayerInfo();
-    let stop = false;
-
-    let knockbackPart = parseInt(knockback / parts);
-    let animationLoop = setInterval(() => {
-      let collision = this.game.mainPlayer.getCollisionInfo();
-      switch (direction) {
-        case "w":
-          if (
-            this.game.checkAllCollisions({
-              ...collision,
-              y: collision.y - knockbackPart,
-            })
-          ) {
-            clearInterval(animationLoop);
-            break;
-          }
-          this.game.mainPlayer.y -= knockbackPart;
-          if (this.game.mainPlayer.y <= initial.y - knockback) stop = true;
-          if (this.game.cameraPositionY + knockbackPart < 0) {
-            this.game.cameraPositionY += knockbackPart;
-          }
-          break;
-        case "a":
-          if (
-            this.game.checkAllCollisions({
-              ...collision,
-              x: collision.x - knockbackPart,
-            })
-          ) {
-            clearInterval(animationLoop);
-            break;
-          }
-          this.game.mainPlayer.x -= knockbackPart;
-          if (this.game.mainPlayer.x <= initial.x - knockback) stop = true;
-          if (this.game.cameraPositionX + knockbackPart < 0) {
-            this.game.cameraPositionX += knockbackPart;
-          }
-          break;
-        case "s":
-          if (
-            this.game.checkAllCollisions({
-              ...collision,
-              y: collision.y + knockbackPart,
-            })
-          ) {
-            clearInterval(animationLoop);
-            break;
-          }
-          this.game.mainPlayer.y += knockbackPart;
-          if (this.game.mainPlayer.y >= initial.y + knockback) stop = true;
-          if (
-            -(this.game.cameraPositionY - knockbackPart) <
-            this.game.canvas.height
-          ) {
-            this.game.cameraPositionY -= knockbackPart;
-          }
-          break;
-        case "d":
-          if (
-            this.game.checkAllCollisions({
-              ...collision,
-              x: collision.x + knockbackPart,
-            })
-          ) {
-            clearInterval(animationLoop);
-            break;
-          }
-          this.game.mainPlayer.x += knockbackPart;
-          if (this.game.mainPlayer.x >= initial.x + knockback) stop = true;
-          if (
-            -(this.game.cameraPositionX - knockbackPart) <
-            this.game.canvas.width
-          ) {
-            this.game.cameraPositionX -= knockbackPart;
-          }
-          break;
-      }
-      this.game.connection.emitMovement();
-      if (stop) {
-        clearInterval(animationLoop);
-      }
-    }, 10);
-  }
+    
 
   trigger() {
-    if (this.game.mainPlayer.canTakeDamage && (this.game.mainPlayer.immuneFrom != this.user.direction)) {
-      this.game.mainPlayer.canTakeDamage = false;
-      this.game.mainPlayer.canMove = false;
-      this.game.mainPlayer.startBlinking()
-      if (this.game.mainPlayer.life - 1 > 0) {
-        this.game.mainPlayer.life -= 1;
-        this.takeKnockbackTo(40, this.user.direction, 10);
-      } else {
-        this.game.mainPlayer.life = 0;
-        this.game.mainPlayer.respawn();
-        this.game.resetCamera();
-        this.game.connection.emitMovement();
-      }
-      
-
-      setTimeout(() => {
-        this.game.mainPlayer.canTakeDamage = true;
-        this.game.mainPlayer.canMove = true;
-      }, 200);
-    }
+    this.game.mainPlayer.takeDamage(1, 40, this.user.direction)
   }
 
   animate() {
@@ -261,30 +145,33 @@ export class Sword extends CollisionEntity {
     );
   }
 
+  startCooldown(time){
+    this.canUse = false;
+    setTimeout(() => {
+      this.canUse = true;
+    }, time);
+  }
+
+  addAsEntityByTime(time){
+    this.game.addToGame(this);
+      setTimeout(() => {
+        this.game.removeFromGame(this);
+      }, time);
+  }
+
   use() {
-    this.animate();
     if (
       this.game.entities.findIndex((entity) => {
         return entity.use && entity.user == this.user;
       }) == -1 &&
       this.canUse
     ) {
-      if (this.user.direction == "s") {
-        this.priorize = true;
-      } else {
-        this.priorize = false;
-      }
-      this.canUse = false;
-      this.user.canMove = false;
+      this.animate();
+      this.abovePlayer = this.user.direction == "s";
       this.user.frame = 1;
-      setTimeout(() => {
-        this.canUse = true;
-        this.user.canMove = true;
-      }, 300);
-      this.game.addToGame(this);
-      setTimeout(() => {
-        this.game.removeFromGame(this);
-      }, 200);
+      this.user.stopMoving(300)
+      this.startCooldown(300)
+      this.addAsEntityByTime(200)
     }
   }
 }

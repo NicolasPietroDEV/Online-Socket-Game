@@ -3,8 +3,6 @@ import { CollisionEntity } from "./CollisionEntity.js";
 export class House extends CollisionEntity {
     constructor(game, info){
         super(game, false, info)
-        this.game = game
-        this.ctx = this.game.ctx
         this.spriteImg = new Image(52,78)
         this.spriteImg.src = "assets/house.png"
         this.game.addToGame(this)

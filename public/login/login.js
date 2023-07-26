@@ -6,10 +6,10 @@ let roomsDatalist = document.getElementById('rooms');
 window.onload = setup
 
 async function createList(){
-    let rooms = await (await fetch("/rooms")).json()
+    let roomsList = await (await fetch("/rooms")).json()
     list = ""
-    for (room of rooms){
-        list += `<option value="${room.name}">`
+    for (roomOption of roomsList){
+        list += `<option value="${roomOption.name}">`
     }
     roomsDatalist.innerHTML += list
 }
@@ -33,6 +33,7 @@ function enterKey(event){
 function enter(){
     if(nickname.value){
         localStorage.setItem('name', nickname.value);
+        console.log(room)
         localStorage.setItem('room', room.value || 'main')
         window.location.replace("..")
     }

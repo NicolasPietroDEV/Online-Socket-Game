@@ -21,6 +21,7 @@ export class Shield extends Entity {
             "a": "d",
             "d": "a"
         }
+        this.abovePlayer = false
         this.spriteImg = new Image(21, 21)
         this.spriteImg.src = "../../assets/shield.png"
         user.addWeapon(this)
@@ -74,7 +75,7 @@ export class Shield extends Entity {
             }) == -1 &&
             this.canUse
           ) {
-              if(this.user.direction == "s"){this.priorize = true}
+              this.abovePlayer = this.user.direction == "s"
               this.user.immuneFrom = this.immunityMap[this.user.direction]
               this.game.addToGame(this)
               this.canUse = false

@@ -147,15 +147,8 @@ export class Game {
   }
 
   sortByY(){
-    let sorted = [...this.entities]
-    let weapons = []
-    sorted.forEach((item, index)=>{
-      if (item.priorize) {
-        weapons.push(item)
-        sorted.splice(index, 1)
-      }
-      
-    })
+    let weapons = this.entities.filter((entity)=>entity.use)
+    let sorted = this.entities.filter((entity)=>!entity.use)
     while(true){
       let swaps = 0    
     for (let i=0; i<sorted.length-1; i++){
@@ -170,7 +163,18 @@ export class Game {
       break
     }
   }
-    return [...sorted, ...weapons]
+    for (let weapon of weapons){
+      let index = sorted.findIndex((entity)=>(entity instanceof Player) && (weapon.user.id == entity.id))
+      if(weapon.abovePlayer) index += 1
+      sorted = [
+        ...sorted.slice(0, index),
+        weapon,
+        ...sorted.slice(index)
+      ]
+
+    }
+
+    return sorted
   }
 
   addToGame(entity){

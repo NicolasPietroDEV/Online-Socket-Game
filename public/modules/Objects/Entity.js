@@ -1,6 +1,5 @@
 export class Entity {
     constructor(game, info){
-        this.priorize = false
         this.game = game;
         this.ctx = this.game.ctx;
         this.x = info.x
