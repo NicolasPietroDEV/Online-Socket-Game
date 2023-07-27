@@ -1,3 +1,4 @@
+import { MediaLoader } from "../Helpers/MediaLoader.js";
 import { CollisionEntity } from "../Objects/CollisionEntity.js";
 
 export class Sword extends CollisionEntity {
@@ -23,9 +24,8 @@ export class Sword extends CollisionEntity {
     this.abovePlayer = false
 
     this.frame = 0;
-    this.spriteImg = new Image(70, 100);
+    this.spriteImg = MediaLoader.getImage("../assets/sprites/items/sword.png", 70,100)
     this.canUse = true;
-    this.spriteImg.src = "../assets/sword.png";
     this.user.addWeapon(this);
     if (this.game.devMode) {
       console.log("Sword Created");
@@ -113,6 +113,7 @@ export class Sword extends CollisionEntity {
 
   trigger() {
     this.game.mainPlayer.takeDamage(1, 40, this.user.direction)
+    
   }
 
   animate() {
@@ -160,12 +161,14 @@ export class Sword extends CollisionEntity {
   }
 
   use() {
+    
     if (
       this.game.entities.findIndex((entity) => {
         return entity.use && entity.user == this.user;
       }) == -1 &&
       this.canUse
     ) {
+      MediaLoader.playSound(`../../assets/sfx/swing${Math.ceil(Math.random()*3)}.wav`)
       this.animate();
       this.abovePlayer = this.user.direction == "s";
       this.user.frame = 1;

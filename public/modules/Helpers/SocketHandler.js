@@ -25,7 +25,6 @@ export class SocketHandler {
           this.socket.on("newPlayer", (info)=>{
             this.chat.innerHTML += `<p class="warn" style='color: white; background-color: ${info.color}'>O Jogador ${info.name} entrou</p>`
             this.game.addPlayer(info)
-            this.game.refreshEntities()
           })
           
           this.socket.on("playerLeft", (id)=>{
@@ -34,7 +33,6 @@ export class SocketHandler {
             player.weapons.forEach((weapon)=>{weapon.stop && weapon.stop()})
             this.chat.innerHTML += `<p class="warn" style='color: red; background-color: ${player.color}'>O Jogador ${player.name} saiu</p>`
             this.game.entities.splice(left, 1)
-            this.game.refreshEntities()
           })
 
           this.socket.on("useWeapon", (info)=>{

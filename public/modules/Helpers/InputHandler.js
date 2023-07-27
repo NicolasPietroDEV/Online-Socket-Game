@@ -15,7 +15,14 @@ export class InputHandler {
                   this.game.mainPlayer.weapons[1].stop()
                   this.game.connection.emitWeaponUsed(1, false)
                 }
+              },
+              "l": (state)=>{
+                if(state){this.game.mainPlayer.weapons[2].use();this.game.connection.emitWeaponUsed(2, true)} else {
+                  this.game.mainPlayer.weapons[2].stop()
+                  this.game.connection.emitWeaponUsed(2, false)
+                }
               }
+              
             }
             this.mainPlayer = this.game.mainPlayer
             this.canvas = this.game.canvas
@@ -42,7 +49,7 @@ export class InputHandler {
             setInterval(()=>{
                 let moved = false
                 if(this.mainPlayer.canMove){for (let key of Object.keys(this.movementHandler)){
-                    if (this.movementHandler[key] && !this.mainPlayer.immuneFrom){
+                    if (this.movementHandler[key] && this.mainPlayer.canChangeDirection){
                         this.mainPlayer.direction = key
                         moved = true
                     } 

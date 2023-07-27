@@ -1,6 +1,8 @@
 import { CollisionEntity } from "./CollisionEntity.js";
 import { Sword } from "../Weapons/Sword.js";
 import { Shield } from "../Weapons/Shield.js";
+import { MediaLoader } from "../Helpers/MediaLoader.js";
+import { Bow } from "../Weapons/Bow.js";
 
 export class Player extends CollisionEntity {
   constructor(game, playerInfo, notAdd) {
@@ -26,16 +28,16 @@ export class Player extends CollisionEntity {
     this.frame = 1;
     this.life = playerInfo.life;
     this.immuneFrom = false;
-    this.spriteImg = new Image(200, 200);
-    this.spriteImg.src = "../assets/sprite.png";
-    this.lifeBar = new Image(30, 10);
-    this.lifeBar.src = "../assets/lifebar.png";
+    this.canChangeDirection = true
+    this.spriteImg = MediaLoader.getImage("../assets/sprites/player/sprite.png", 200,200)
+    this.lifeBar = MediaLoader.getImage("../assets/sprites/misc/lifebar.png", 30,10)
     if (!notAdd) this.game.addToGame(this);
     if (this.game.devMode) console.log("Player created");
     this.draw();
     this.animate();
     new Sword(game, this);
     new Shield(game, this);
+    new Bow(game, this)
   }
 
   get collisionY() {

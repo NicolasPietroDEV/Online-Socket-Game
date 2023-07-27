@@ -16,7 +16,7 @@ export class Game {
     this.canvas = canvas
 
     this.sceneryImg = new Image(240,240) 
-    this.sceneryImg.src = "../assets/map.png"   
+    this.sceneryImg.src = "../assets/sprites/maps/map.png"   
     this.sceneryHeight = 1000
     this.sceneryWidth = 1000
     
@@ -45,7 +45,6 @@ export class Game {
     if(this.devMode)console.log("Game started")
     this.connection.joinRoom()
     this.ctx.imageSmoothingEnabled = false
-    this.refreshEntities()
   }
 
   resetCamera(){
@@ -80,7 +79,6 @@ export class Game {
   movePlayer(info, index){
     this.entities[index].changePos(info)
     this.entities[index].life = info.life
-    this.refreshEntities()
   }
 
   addPlayer(info){
@@ -102,7 +100,6 @@ export class Game {
     for (let player of oldPlayers){
         this.addPlayer(player)
     }
-    this.refreshEntities()
   }
 
   refreshEntities(){
@@ -129,17 +126,16 @@ export class Game {
     this.ctx.fillText(`X: ${parseInt(posX)- this.cameraPositionX} Y: ${parseInt(posY)- this.cameraPositionY}`, posX, posY)
   }
 
-  checkAllCollisions(sprite, triggerEvent){
+  checkAllCollisions(sprite, triggerEvent, ignore){
     return !this.entities.every((entity)=>{
       if (((entity.collidesWith||false) && entity.collidesWith(sprite)) && triggerEvent && entity.trigger) entity.trigger()
-      return !(entity.collidesWith && entity.collidesWith(sprite)) || entity.canPassThrough
+      return (!(entity.collidesWith && entity.collidesWith(sprite)) || entity==ignore) || entity.canPassThrough
     })
   }
 
   turnDevMode(){
     this.devMode = !this.devMode;
     if(this.devMode){console.log("DevMode started");}else{console.log("DevMode turned off")}
-    this.refreshEntities()
 }
 
   #randomNumber() {
@@ -184,6 +180,6 @@ export class Game {
   removeFromGame(entity){
     let index = this.entities.findIndex((gameEntity) => gameEntity == entity)
     if (index == -1) return
-    if(this.entities[index]==entity){this.entities.splice(index,1)} else {this.refreshEntities(entity)}
+    if(this.entities[index]==entity){this.entities.splice(index,1)}
   }
 }

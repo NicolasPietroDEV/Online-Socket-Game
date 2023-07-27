@@ -1,7 +1,8 @@
 import { MediaLoader } from "../Helpers/MediaLoader.js"
 import { Entity } from "../Objects/Entity.js"
+import { Arrow } from "./Arrow.js"
 
-export class Shield extends Entity {
+export class Bow extends Entity {
     constructor(game, user){
         super(game, {
             x: user.x,
@@ -11,10 +12,10 @@ export class Shield extends Entity {
         })
         this.user = user
         this.spriteMap = {
-            "w": 3,
+            "w": 0,
             "a": 1,
-            "d": 2,
-            "s": 0
+            "d": 3,
+            "s": 2
         }
         this.immunityMap = {
             "w": "s",
@@ -23,18 +24,19 @@ export class Shield extends Entity {
             "d": "a"
         }
         this.abovePlayer = false
-        this.spriteImg = MediaLoader.getImage("../../assets/sprites/items/shield.png", 21,21)
+        this.spriteImg = MediaLoader.getImage("../../assets/sprites/items/bow.png", 21,21)
         user.addWeapon(this)
         this.canUse = true
+        this.isUsing = false
     }
 
     draw(){
         this.ctx.drawImage(
             this.spriteImg,
-            1 + this.spriteMap[this.user.direction]*21,
+            1 + this.spriteMap[this.user.direction]*25,
             1,
-            21,
-            21,
+            25,
+            25,
             this.positionX + this.game.cameraPositionX,
             this.positionY + this.game.cameraPositionY,
             42,
@@ -62,7 +64,7 @@ export class Shield extends Entity {
           case "a":
             return this.user.y + this.height;
           case "s":
-            return this.user.y + this.height;
+            return this.user.y + this.height*1.5;
           case "d":
             return this.user.y + this.height;
         }
@@ -76,24 +78,30 @@ export class Shield extends Entity {
             this.canUse
           ) {
               this.abovePlayer = this.user.direction == "s"
-              this.user.immuneFrom = this.immunityMap[this.user.direction]
-              this.user.canChangeDirection = false
               this.game.addToGame(this)
               this.canUse = false
+              this.user.canChangeDirection = false
                 this.user.speed = 1
-            this.isUsing = true
+              this.isUsing = true
             }
         
     }
     stop(){
+      if(this.isUsing){new Arrow(this.game,
+        this.user, {
+          x: this.positionX,
+          y: this.positionY,
+          width: 32,
+          height: 32,
+        }, 10, this.user.direction)
+        this.isUsing = false
+        this.game.removeFromGame(this)
+        this.user.speed = 4
+        this.user.canChangeDirection = true
+          setTimeout(()=>{this.canUse = true}, 500)
+      }
         
-        if(this.isUsing){
-            this.user.speed = 4; 
-            this.user.canChangeDirection = true;
-            this.game.removeFromGame(this)
-            this.user.immuneFrom = false
-            this.canUse = true
-            this.isUsing = false
-        }
     }
+
+    
 }

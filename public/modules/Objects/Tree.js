@@ -1,3 +1,4 @@
+import { MediaLoader } from "../Helpers/MediaLoader.js";
 import { CollisionEntity } from "./CollisionEntity.js";
 
 export class Tree extends CollisionEntity {
@@ -5,8 +6,7 @@ export class Tree extends CollisionEntity {
     super(game, false, info);
     this.game = game;
     this.ctx = this.game.ctx;
-    this.spriteImg = new Image(42, 51);
-    this.spriteImg.src = "../assets/tree.png";
+    this.spriteImg = MediaLoader.getImage("../assets/sprites/objects/tree.png", 42,51)
     this.game.addToGame(this);
   }
 
