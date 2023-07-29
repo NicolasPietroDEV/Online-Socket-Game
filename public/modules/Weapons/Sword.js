@@ -16,10 +16,10 @@ export class Sword extends CollisionEntity {
     );
     this.user = user;
     this.spriteMap = {
-      w: 0,
-      a: 1,
-      s: 2,
-      d: 3,
+      up: 0,
+      left: 1,
+      down: 2,
+      right: 3,
     };
     this.abovePlayer = false
 
@@ -34,36 +34,36 @@ export class Sword extends CollisionEntity {
 
   get collisionX() {
     switch (this.user.direction) {
-      case "w":
-      case "s":
+      case "up":
+      case "down":
         return (
           this.user.x +
           this.width / 4 -
           this.collisionWidth / 4 +
           this.game.cameraPositionX
         );
-      case "a":
+      case "left":
         return this.user.x - this.collisionWidth + this.game.cameraPositionX;
-      case "d":
+      case "right":
         return this.user.x + this.user.width + this.game.cameraPositionX;
     }
   }
 
   get collisionY() {
     switch (this.user.direction) {
-      case "w":
+      case "up":
         return (
           this.user.y - this.collisionHeight / 2 + this.game.cameraPositionY
         );
-      case "a":
-      case "d":
+      case "left":
+      case "right":
         return (
           this.user.y +
           this.user.height / 2 -
           this.collisionWidth / 2 +
           this.game.cameraPositionY
         );
-      case "s":
+      case "down":
         return this.user.y + this.user.height + this.game.cameraPositionY;
     }
   }
@@ -78,32 +78,32 @@ export class Sword extends CollisionEntity {
 
   get positionX() {
     switch (this.user.direction) {
-      case "w":
+      case "up":
         if (this.frame == 0) return this.collisionX + 10;
         if (this.frame == 2) return this.collisionX - 10;
         return this.collisionX;
-      case "a":
+      case "left":
         return this.collisionX + this.collisionWidth / 3;
-      case "s":
+      case "down":
         if (this.frame == 0) return this.collisionX - 10;
         if (this.frame == 2) return this.collisionX + 10;
         return this.collisionX;
-      case "d":
+      case "right":
         return this.collisionX - this.collisionWidth / 3;
     }
   }
 
   get positionY() {
     switch (this.user.direction) {
-      case "w":
+      case "up":
         return this.collisionY + this.collisionHeight / 2;
-      case "a":
+      case "left":
         if (this.frame == 0) return this.collisionY - 10;
         if (this.frame == 2) return this.collisionY + 10;
         return this.collisionY;
-      case "s":
+      case "down":
         return this.collisionY - this.collisionHeight / 2;
-      case "d":
+      case "right":
         if (this.frame == 0) return this.collisionY + 10;
         if (this.frame == 2) return this.collisionY - 10;
         return this.collisionY;
@@ -170,7 +170,7 @@ export class Sword extends CollisionEntity {
     ) {
       MediaLoader.playSound(`../../assets/sfx/swing${Math.ceil(Math.random()*3)}.wav`)
       this.animate();
-      this.abovePlayer = this.user.direction == "s";
+      this.abovePlayer = this.user.direction == "down";
       this.user.frame = 1;
       this.user.stopMoving(300)
       this.startCooldown(300)

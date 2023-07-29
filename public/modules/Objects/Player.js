@@ -3,6 +3,7 @@ import { Sword } from "../Weapons/Sword.js";
 import { Shield } from "../Weapons/Shield.js";
 import { MediaLoader } from "../Helpers/MediaLoader.js";
 import { Bow } from "../Weapons/Bow.js";
+import { Bomb } from "../Weapons/Bomb.js";
 
 export class Player extends CollisionEntity {
   constructor(game, playerInfo, notAdd) {
@@ -11,10 +12,10 @@ export class Player extends CollisionEntity {
     this.game = game;
     this.ctx = this.game.ctx;
     this.directionMapping = {
-      w: 0,
-      a: 1,
-      s: 2,
-      d: 3,
+      up: 0,
+      left: 1,
+      down: 2,
+      right: 3,
     };
     this.id = playerInfo.id;
     this.direction = playerInfo.direction;
@@ -38,6 +39,7 @@ export class Player extends CollisionEntity {
     new Sword(game, this);
     new Shield(game, this);
     new Bow(game, this)
+    new Bomb(game, this)
   }
 
   get collisionY() {
@@ -120,7 +122,7 @@ export class Player extends CollisionEntity {
     this.changePos({
       x: this.game.spawn.x,
       y: this.game.spawn.y,
-      direction: "s",
+      direction: "down",
     });
   }
 
@@ -148,7 +150,7 @@ export class Player extends CollisionEntity {
     let animationLoop = setInterval(() => {
       let collision = this.getCollisionInfo();
       switch (direction) {
-        case "w":
+        case "up":
           if (
             this.game.checkAllCollisions({
               ...collision,
@@ -164,7 +166,7 @@ export class Player extends CollisionEntity {
             this.game.cameraPositionY += knockbackPart;
           }
           break;
-        case "a":
+        case "left":
           if (
             this.game.checkAllCollisions({
               ...collision,
@@ -180,7 +182,7 @@ export class Player extends CollisionEntity {
             this.game.cameraPositionX += knockbackPart;
           }
           break;
-        case "s":
+        case "down":
           if (
             this.game.checkAllCollisions({
               ...collision,
@@ -199,7 +201,7 @@ export class Player extends CollisionEntity {
             this.game.cameraPositionY -= knockbackPart;
           }
           break;
-        case "d":
+        case "right":
           if (
             this.game.checkAllCollisions({
               ...collision,
@@ -226,8 +228,8 @@ export class Player extends CollisionEntity {
     }, 10);
   }
 
-  takeDamage(amount, knockback, direction) {
-    if (this.canTakeDamage && this.immuneFrom != direction) {
+  takeDamage(amount, knockback, direction, ignoreImmunity) {
+    if (this.canTakeDamage && (this.immuneFrom != direction || ignoreImmunity)) {
       this.startImmunity(300);
       this.startBlinking();
       if (this.life - amount > 0) {

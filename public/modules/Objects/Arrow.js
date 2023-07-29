@@ -1,5 +1,5 @@
 import { MediaLoader } from "../Helpers/MediaLoader.js";
-import { CollisionEntity } from "../Objects/CollisionEntity.js";
+import { CollisionEntity } from "./CollisionEntity.js";
 
 export class Arrow extends CollisionEntity {
   constructor(game, user, info, speed, direction) {
@@ -7,10 +7,10 @@ export class Arrow extends CollisionEntity {
     this.direction = direction;
     this.user = user
     this.spriteMap = {
-      w: 0,
-      a: 1,
-      s: 2,
-      d: 3,
+      up: 0,
+      left: 1,
+      down: 2,
+      right: 3,
     };
     this.game.addToGame(this);
     this.active = true
@@ -23,21 +23,22 @@ export class Arrow extends CollisionEntity {
   fly(speed) {
     let flyLoop = setInterval(() => {
       switch (this.direction) {
-        case "w":
+        case "up":
           this.y -= speed;
           break;
-        case "a":
+        case "left":
           this.x -= speed;
           break;
-        case "s":
+        case "down":
           this.y += speed;
           break;
-        case "d":
+        case "right":
           this.x += speed;
           break;
       }
       if (this.game.checkAllCollisions(this.getCollisionInfo(), false, this.user)) {
         clearInterval(flyLoop);
+        MediaLoader.playSound("../../assets/sfx/arrow_hit.mp3")
         this.active = false;
         setTimeout(()=>{
             this.game.removeFromGame(this)

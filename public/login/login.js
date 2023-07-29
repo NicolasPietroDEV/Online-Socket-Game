@@ -33,7 +33,6 @@ function enterKey(event){
 function enter(){
     if(nickname.value){
         localStorage.setItem('name', nickname.value);
-        console.log(room)
         localStorage.setItem('room', room.value || 'main')
         window.location.replace("..")
     }

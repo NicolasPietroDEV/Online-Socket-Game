@@ -1,6 +1,6 @@
 import { MediaLoader } from "../Helpers/MediaLoader.js"
 import { Entity } from "../Objects/Entity.js"
-import { Arrow } from "./Arrow.js"
+import { Arrow } from "../Objects/Arrow.js"
 
 export class Bow extends Entity {
     constructor(game, user){
@@ -12,16 +12,16 @@ export class Bow extends Entity {
         })
         this.user = user
         this.spriteMap = {
-            "w": 0,
-            "a": 1,
-            "d": 3,
-            "s": 2
+            "up": 0,
+            "left": 1,
+            "right": 3,
+            "down": 2
         }
         this.immunityMap = {
-            "w": "s",
-            "s": "w",
-            "a": "d",
-            "d": "a"
+            "up": "down",
+            "down": "up",
+            "left": "right",
+            "right": "left"
         }
         this.abovePlayer = false
         this.spriteImg = MediaLoader.getImage("../../assets/sprites/items/bow.png", 21,21)
@@ -46,26 +46,26 @@ export class Bow extends Entity {
 
     get positionX() {
         switch (this.user.direction) {
-          case "w":
+          case "up":
             return this.user.x - this.width/2;
-          case "a":
+          case "left":
             return this.user.x - this.width;
-          case "s":
+          case "down":
             return this.user.x + this.width/2;
-          case "d":
+          case "right":
             return this.user.x + this.width ;
         }
       }
     
       get positionY() {
         switch (this.user.direction) {
-          case "w":
+          case "up":
             return this.user.y + this.height / 2;
-          case "a":
+          case "left":
             return this.user.y + this.height;
-          case "s":
+          case "down":
             return this.user.y + this.height*1.5;
-          case "d":
+          case "right":
             return this.user.y + this.height;
         }
       }
@@ -77,7 +77,7 @@ export class Bow extends Entity {
             }) == -1 &&
             this.canUse
           ) {
-              this.abovePlayer = this.user.direction == "s"
+              this.abovePlayer = this.user.direction == "down"
               this.game.addToGame(this)
               this.canUse = false
               this.user.canChangeDirection = false
@@ -94,6 +94,7 @@ export class Bow extends Entity {
           width: 32,
           height: 32,
         }, 10, this.user.direction)
+        MediaLoader.playSound("../../assets/sfx/arrow_shoot.wav")
         this.isUsing = false
         this.game.removeFromGame(this)
         this.user.speed = 4

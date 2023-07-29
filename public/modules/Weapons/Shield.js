@@ -11,16 +11,16 @@ export class Shield extends Entity {
         })
         this.user = user
         this.spriteMap = {
-            "w": 3,
-            "a": 1,
-            "d": 2,
-            "s": 0
+            "up": 3,
+            "left": 1,
+            "right": 2,
+            "down": 0
         }
         this.immunityMap = {
-            "w": "s",
-            "s": "w",
-            "a": "d",
-            "d": "a"
+            "up": "down",
+            "down": "up",
+            "left": "right",
+            "right": "left"
         }
         this.abovePlayer = false
         this.spriteImg = MediaLoader.getImage("../../assets/sprites/items/shield.png", 21,21)
@@ -44,26 +44,26 @@ export class Shield extends Entity {
 
     get positionX() {
         switch (this.user.direction) {
-          case "w":
+          case "up":
             return this.user.x - this.width/2;
-          case "a":
+          case "left":
             return this.user.x - this.width;
-          case "s":
+          case "down":
             return this.user.x + this.width/2;
-          case "d":
+          case "right":
             return this.user.x + this.width ;
         }
       }
     
       get positionY() {
         switch (this.user.direction) {
-          case "w":
+          case "up":
             return this.user.y + this.height / 2;
-          case "a":
+          case "left":
             return this.user.y + this.height;
-          case "s":
+          case "down":
             return this.user.y + this.height;
-          case "d":
+          case "right":
             return this.user.y + this.height;
         }
       }
@@ -75,7 +75,7 @@ export class Shield extends Entity {
             }) == -1 &&
             this.canUse
           ) {
-              this.abovePlayer = this.user.direction == "s"
+              this.abovePlayer = this.user.direction == "down"
               this.user.immuneFrom = this.immunityMap[this.user.direction]
               this.user.canChangeDirection = false
               this.game.addToGame(this)

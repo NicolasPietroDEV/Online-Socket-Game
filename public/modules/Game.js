@@ -32,7 +32,7 @@ export class Game {
       height: 60,
       speed: 4,
       life: 10,
-      direction: "s",
+      direction: "down",
       color: `rgb(${this.#randomNumber()}, ${this.#randomNumber()}, ${this.#randomNumber()})`,
       name: localStorage.getItem("name") || "João Gomes Da Silva",
     });
@@ -126,10 +126,10 @@ export class Game {
     this.ctx.fillText(`X: ${parseInt(posX)- this.cameraPositionX} Y: ${parseInt(posY)- this.cameraPositionY}`, posX, posY)
   }
 
-  checkAllCollisions(sprite, triggerEvent, ignore){
+  checkAllCollisions(sprite, triggerEvent, ignoreObject, ignorePlayerAndWeapons){
     return !this.entities.every((entity)=>{
       if (((entity.collidesWith||false) && entity.collidesWith(sprite)) && triggerEvent && entity.trigger) entity.trigger()
-      return (!(entity.collidesWith && entity.collidesWith(sprite)) || entity==ignore) || entity.canPassThrough
+      return (!(entity.collidesWith && entity.collidesWith(sprite)) || entity==ignoreObject) || entity.canPassThrough || (ignorePlayerAndWeapons && (entity instanceof Player || entity.use))
     })
   }
 
