@@ -129,7 +129,7 @@ export class Game {
   checkAllCollisions(sprite, triggerEvent, ignoreObject, ignorePlayerAndWeapons){
     return !this.entities.every((entity)=>{
       if (((entity.collidesWith||false) && entity.collidesWith(sprite)) && triggerEvent && entity.trigger) entity.trigger()
-      return (!(entity.collidesWith && entity.collidesWith(sprite)) || entity==ignoreObject) || entity.canPassThrough || (ignorePlayerAndWeapons && (entity instanceof Player || entity.use))
+      return (!(entity.collidesWith && entity.collidesWith(sprite)) || entity==ignoreObject) || entity.canPassThrough
     })
   }
 
