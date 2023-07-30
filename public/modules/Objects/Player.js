@@ -88,6 +88,7 @@ export class Player extends CollisionEntity {
       isMoving: this.isMoving,
       life: this.life,
       blinkState: this.blinkState,
+      inventory: this.inventory
     };
   }
 

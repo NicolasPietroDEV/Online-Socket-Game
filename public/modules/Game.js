@@ -88,6 +88,7 @@ export class Game {
   movePlayer(info, index){
     this.entities[index].changePos(info)
     this.entities[index].life = info.life
+    this.entities[index].inventory = info.inventory
   }
 
   addPlayer(info){
