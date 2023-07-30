@@ -30,6 +30,7 @@ export class Player extends CollisionEntity {
     this.life = playerInfo.life;
     this.immuneFrom = false;
     this.canChangeDirection = true
+    this.inventory = { arrow: 10, bomb: 10 }
     this.spriteImg = MediaLoader.getImage("../assets/sprites/player/sprite.png", 200,200)
     this.lifeBar = MediaLoader.getImage("../assets/sprites/misc/lifebar.png", 30,10)
     if (!notAdd) this.game.addToGame(this);

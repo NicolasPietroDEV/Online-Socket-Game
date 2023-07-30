@@ -8,8 +8,8 @@ export class InputHandler {
                 "down": false,
             }
             this.otherKeys = {
-              "q": 0,
-              "w": 1,
+              "z": 0,
+              "x": 1,
               "a": 2,
               "s": 3
             }

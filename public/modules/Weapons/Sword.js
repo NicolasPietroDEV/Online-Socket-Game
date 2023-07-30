@@ -1,5 +1,6 @@
 import { MediaLoader } from "../Helpers/MediaLoader.js";
 import { CollisionEntity } from "../Objects/CollisionEntity.js";
+import { Jar } from "../Objects/Jar.js";
 
 export class Sword extends CollisionEntity {
   constructor(game, user) {
@@ -109,6 +110,16 @@ export class Sword extends CollisionEntity {
         return this.collisionY;
     }
   }
+
+  breakJar(){
+    let jars = this.game.entities.filter((entity)=>entity instanceof Jar)
+
+    for (let jar of jars){
+      if (jar.collidesWith(this.getCollisionInfo())){
+        jar.break()
+      }
+    }
+  }
     
 
   trigger() {
@@ -170,6 +181,7 @@ export class Sword extends CollisionEntity {
     ) {
       MediaLoader.playSound(`../../assets/sfx/swing${Math.ceil(Math.random()*3)}.wav`)
       this.animate();
+      this.breakJar()
       this.abovePlayer = this.user.direction == "down";
       this.user.frame = 1;
       this.user.stopMoving(300)

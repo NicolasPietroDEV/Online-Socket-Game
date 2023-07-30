@@ -5,6 +5,8 @@ import { SocketHandler } from "./Helpers/SocketHandler.js";
 import { Wall } from "./Objects/Wall.js";
 import { House } from "./Objects/House.js";
 import { Tree } from "./Objects/Tree.js";
+import { Jar } from "./Objects/Jar.js";
+import { Interface } from "./Helpers/Interface.js";
 
 export class Game {
   entities = [];
@@ -40,6 +42,7 @@ export class Game {
     this.cameraPositionY = -(this.mainPlayer.y + this.mainPlayer.height/2 - this.canvas.height/2)
     this.connection = new SocketHandler(this);
     this.input = new InputHandler(this, canvas);
+    this.interface = new Interface(this)
     this.input.startMovementChecker()
     this.createWallsCollision()
     if(this.devMode)console.log("Game started")
@@ -66,6 +69,12 @@ export class Game {
     
     new Tree(this, {x: 200, y: 100, width:120, height: 144})
     new Tree(this, {x: 670, y: 100, width:120, height: 144})
+
+    new Jar(this, {x: 380, y: 120, width:34, height: 41})
+    new Jar(this, {x: 380, y: 170, width:34, height: 41})
+    new Jar(this, {x: 580, y: 120, width:34, height: 41})
+    new Jar(this, {x: 580, y: 170, width:34, height: 41})
+
   }
 
   drawScenery(){
@@ -109,6 +118,7 @@ export class Game {
     for (let player of sortedEntities){
       if(player.draw)player.draw()
     }
+    this.interface.drawInterface()
     return sortedEntities
   }
 
@@ -126,7 +136,7 @@ export class Game {
     this.ctx.fillText(`X: ${parseInt(posX)- this.cameraPositionX} Y: ${parseInt(posY)- this.cameraPositionY}`, posX, posY)
   }
 
-  checkAllCollisions(sprite, triggerEvent, ignoreObject, ignorePlayerAndWeapons){
+  checkAllCollisions(sprite, triggerEvent, ignoreObject){
     return !this.entities.every((entity)=>{
       if (((entity.collidesWith||false) && entity.collidesWith(sprite)) && triggerEvent && entity.trigger) entity.trigger()
       return (!(entity.collidesWith && entity.collidesWith(sprite)) || entity==ignoreObject) || entity.canPassThrough

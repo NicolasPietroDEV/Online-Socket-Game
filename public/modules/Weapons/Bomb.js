@@ -1,4 +1,5 @@
 import { BombEntity } from "../Objects/BombEntity.js";
+import { Jar } from "../Objects/Jar.js";
 
 export class Bomb {
     constructor(game, user){
@@ -33,12 +34,14 @@ export class Bomb {
         }
     }
 
+   
     use() {
         if (
             this.game.entities.findIndex((entity) => {
               return entity.use && entity.user == this.user;
-            }) == -1
+            }) == -1 && this.user.inventory.bomb
           ) {
+            this.user.inventory.bomb -= 1
         new BombEntity(this.game, {
             x: this.positionX,
             y: this.positionY,
