@@ -193,4 +193,13 @@ export class Game {
     if (index == -1) return
     if(this.entities[index]==entity){this.entities.splice(index,1)}
   }
+
+  breakJarsCollidingWith(sprite){
+    let jars = this.entities.filter((entity)=>entity instanceof Jar)
+    for (let jar of jars){
+      if (jar.collidesWith(sprite)){
+        jar.break()
+      }
+    }
+  }
 }

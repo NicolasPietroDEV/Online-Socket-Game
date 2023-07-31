@@ -1,7 +1,6 @@
 import { MediaLoader } from "../Helpers/MediaLoader.js";
 import { CollisionEntity } from "./CollisionEntity.js";
 import { Explosion } from "./Explosion.js";
-import { Jar } from "./Jar.js";
 
 export class BombEntity extends CollisionEntity {
   constructor(game, info) {
@@ -15,9 +14,6 @@ export class BombEntity extends CollisionEntity {
     this.explodeInTime(3000)
     this.exploded = false
   }
-
-  
-
 
   explodeInTime(time){
     setTimeout(()=>{

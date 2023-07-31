@@ -47,16 +47,11 @@ export class Arrow extends CollisionEntity {
     }, 25);
   }
   draw() {
-    this.ctx.drawImage(
-      this.spriteImg,
+    this.drawSprite(
       1 + this.spriteMap[this.direction] * 15,
       1,
       15,
-      15,
-      this.x + this.game.cameraPositionX,
-        this.y + this.game.cameraPositionY,
-        this.width,
-        this.height
+      15
     );
     if (this.game.devMode){this.showBox()}
   }

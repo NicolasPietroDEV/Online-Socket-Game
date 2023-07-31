@@ -110,16 +110,6 @@ export class Sword extends CollisionEntity {
         return this.collisionY;
     }
   }
-
-  breakJar(){
-    let jars = this.game.entities.filter((entity)=>entity instanceof Jar)
-
-    for (let jar of jars){
-      if (jar.collidesWith(this.getCollisionInfo())){
-        jar.break()
-      }
-    }
-  }
     
 
   trigger() {
@@ -181,7 +171,7 @@ export class Sword extends CollisionEntity {
     ) {
       MediaLoader.playSound(`../../assets/sfx/swing${Math.ceil(Math.random()*3)}.wav`)
       this.animate();
-      this.breakJar()
+      this.game.breakJarsCollidingWith(this.getCollisionInfo())
       this.abovePlayer = this.user.direction == "down";
       this.user.frame = 1;
       this.user.stopMoving(300)

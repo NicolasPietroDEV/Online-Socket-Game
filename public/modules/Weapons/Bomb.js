@@ -1,5 +1,4 @@
 import { BombEntity } from "../Objects/BombEntity.js";
-import { Jar } from "../Objects/Jar.js";
 
 export class Bomb {
     constructor(game, user){

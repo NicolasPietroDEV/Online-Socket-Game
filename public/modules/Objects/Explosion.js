@@ -1,6 +1,5 @@
 import { MediaLoader } from "../Helpers/MediaLoader.js";
 import { CollisionEntity } from "./CollisionEntity.js";
-import { Jar } from "./Jar.js";
 
 export class Explosion extends CollisionEntity {
     constructor(game, info) {
@@ -14,7 +13,7 @@ export class Explosion extends CollisionEntity {
             "right": "left"
         }
         this.disappearIn(500)
-        this.breakJar()
+        this.game.breakJarsCollidingWith(this.getCollisionInfo())
     }
 
     disappearIn(time){
@@ -22,16 +21,6 @@ export class Explosion extends CollisionEntity {
             this.game.removeFromGame(this)
         }, time)
     }
-
-    breakJar(){
-        let jars = this.game.entities.filter((entity)=>entity instanceof Jar)
-    
-        for (let jar of jars){
-          if (jar.collidesWith(this.getCollisionInfo())){
-            jar.break()
-          }
-        }
-      }
 
     draw(){
         this.drawSprite(1,1,41, 37)
