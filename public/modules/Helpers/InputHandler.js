@@ -62,23 +62,23 @@ export class InputHandler {
                     } 
                 }
                 let collisionInfo = this.mainPlayer.getCollisionInfo()
-                let collides = this.game.checkAllCollisions(collisionInfo, true, false, true)
-                  if(this.movementHandler["up"] && (!this.game.checkAllCollisions({...collisionInfo, y: collisionInfo.y-this.mainPlayer.speed})||collides)){
+                let collides = this.game.checkAllCollisions(collisionInfo, true, false)
+                  if(this.movementHandler["up"] && (!this.game.checkAllCollisions({...collisionInfo, y: collisionInfo.y-this.mainPlayer.speed}))){
                     this.mainPlayer.y -= this.mainPlayer.speed
                     if(this.game.cameraPositionY<0 && ((this.game.mainPlayer.y+this.game.cameraPositionY)<(this.game.canvas.height/2 - this.mainPlayer.height/2))) this.game.cameraPositionY += this.mainPlayer.speed
                     moved = true
                   }
-                  if(this.movementHandler["left"] && (!this.game.checkAllCollisions({...collisionInfo, x: collisionInfo.x-this.mainPlayer.speed})||collides )){
+                  if(this.movementHandler["left"] && (!this.game.checkAllCollisions({...collisionInfo, x: collisionInfo.x-this.mainPlayer.speed}) )){
                     this.mainPlayer.x -= this.mainPlayer.speed
                     if(this.game.cameraPositionX<0 && ((this.game.mainPlayer.x+this.game.cameraPositionX)<(this.game.canvas.width/2 - this.mainPlayer.width/2)))this.game.cameraPositionX += this.mainPlayer.speed
                     moved = true
                   }
-                  if(this.movementHandler["down"] && (!this.game.checkAllCollisions({...collisionInfo, y: collisionInfo.y+this.mainPlayer.speed})||collides )){
+                  if(this.movementHandler["down"] && (!this.game.checkAllCollisions({...collisionInfo, y: collisionInfo.y+this.mainPlayer.speed}) )){
                     this.mainPlayer.y += this.mainPlayer.speed
                     if((-this.game.cameraPositionY)<this.game.canvas.height && (this.game.mainPlayer.y>(this.game.canvas.height/2 - this.mainPlayer.height/2)))this.game.cameraPositionY -= this.mainPlayer.speed
                     moved = true
                   }
-                  if(this.movementHandler["right"] && (!this.game.checkAllCollisions({...collisionInfo, x: collisionInfo.x+this.mainPlayer.speed})||collides )){
+                  if(this.movementHandler["right"] && (!this.game.checkAllCollisions({...collisionInfo, x: collisionInfo.x+this.mainPlayer.speed}) )){
                     this.mainPlayer.x += this.mainPlayer.speed
                     if((-this.game.cameraPositionX)<this.game.canvas.width && (this.game.mainPlayer.x>(this.game.canvas.width/2 - this.mainPlayer.width/2)))this.game.cameraPositionX -= this.mainPlayer.speed
                     moved = true

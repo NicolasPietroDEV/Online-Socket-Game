@@ -3,8 +3,7 @@ import { CollisionEntity } from "./CollisionEntity.js";
 
 export class Explosion extends CollisionEntity {
     constructor(game, info) {
-        super(game, true, info)
-        this.spriteImg = MediaLoader.getImage("../../assets/sprites/misc/explosion.png")
+        super(game, true, info, "../../assets/sprites/misc/explosion.png")
         this.game.addToGame(this)
         this.inverseMap = {
             "up": "down",

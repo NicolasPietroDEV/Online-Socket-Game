@@ -1,11 +1,13 @@
 @font-face {
-  font-family: pixel;
-  src: url("assets/fonts/pixelart.ttf");
+  font-family: "PixelArt";
+  src: url(assets/fonts/Pixel-Art.woff);
+  font-weight: bold;
 }
+
 
 body {
   overflow: hidden;
-  background-image: url(assets/background.png);
+  background-image: url(./assets/background.png);
   background-size: cover;
   font-family: "Helvetica";
 }

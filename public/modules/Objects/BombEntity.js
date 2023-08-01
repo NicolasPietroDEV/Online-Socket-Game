@@ -4,10 +4,7 @@ import { Explosion } from "./Explosion.js";
 
 export class BombEntity extends CollisionEntity {
   constructor(game, info) {
-    super(game, false, info);
-    this.spriteImg = MediaLoader.getImage(
-      "../../assets/sprites/items/bomb.png"
-    );
+    super(game, false, info, "../../assets/sprites/items/bomb.png");
     this.red = false
     this.canUse = true;
     this.game.addToGame(this);

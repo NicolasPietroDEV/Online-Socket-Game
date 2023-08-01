@@ -1,10 +1,8 @@
-import { MediaLoader } from "../Helpers/MediaLoader.js";
 import { CollisionEntity } from "./CollisionEntity.js";
 
 export class House extends CollisionEntity {
     constructor(game, info){
-        super(game, false, info)
-        this.spriteImg = MediaLoader.getImage("./assets/sprites/objects/house.png", 52, 78)
+        super(game, false, info, "./assets/sprites/objects/house.png")
         this.game.addToGame(this)
     }
 

@@ -30,6 +30,7 @@ login.addEventListener("click", goToLogin);
 
 function OnStart() {
   GameInstance = new Game(ctx, canvas, chat);
+  if (GameInstance.devMode){window.game = GameInstance}
 }
 
 function sendMessage() {

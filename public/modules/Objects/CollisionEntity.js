@@ -1,8 +1,8 @@
 import { Entity } from "./Entity.js";
 
 export class CollisionEntity extends Entity{
-  constructor(game, canPassThrough, info) {
-    super(game, info)
+  constructor(game, canPassThrough, info, spriteImg) {
+    super(game, info, spriteImg)
     this.canPassThrough = canPassThrough;
     if (this.game.devMode) console.log("Collision Created");
   }

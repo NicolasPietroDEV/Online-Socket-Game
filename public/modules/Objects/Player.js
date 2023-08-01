@@ -7,7 +7,7 @@ import { Bomb } from "../Weapons/Bomb.js";
 
 export class Player extends CollisionEntity {
   constructor(game, playerInfo, notAdd) {
-    super(game, false, playerInfo);
+    super(game, true, playerInfo, "../assets/sprites/player/sprite.png");
     this.weapons = [];
     this.game = game;
     this.ctx = this.game.ctx;
@@ -31,7 +31,6 @@ export class Player extends CollisionEntity {
     this.immuneFrom = false;
     this.canChangeDirection = true
     this.inventory = { arrow: {current: 10, limit: 50}, bomb: {current: 10, limit: 30} }
-    this.spriteImg = MediaLoader.getImage("../assets/sprites/player/sprite.png", 200,200)
     this.lifeBar = MediaLoader.getImage("../assets/sprites/misc/lifebar.png", 30,10)
     if (!notAdd) this.game.addToGame(this);
     if (this.game.devMode) console.log("Player created");
@@ -283,7 +282,7 @@ export class Player extends CollisionEntity {
 
   #drawText() {
     this.ctx.fillStyle = "rgba(0, 0, 0, 0.447)";
-    this.ctx.font = "bolder 12px Arial";
+    this.ctx.font = "bolder 12px PixelArt";
     this.ctx.fillRect(
       this.x +
         this.width / 2 -

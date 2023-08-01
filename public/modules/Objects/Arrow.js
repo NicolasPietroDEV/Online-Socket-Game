@@ -3,7 +3,7 @@ import { CollisionEntity } from "./CollisionEntity.js";
 
 export class Arrow extends CollisionEntity {
   constructor(game, user, info, speed, direction) {
-    super(game, true, info);
+    super(game, true, info, "../../assets/sprites/items/arrow.png");
     this.direction = direction;
     this.user = user
     this.spriteMap = {
@@ -15,9 +15,6 @@ export class Arrow extends CollisionEntity {
     this.game.addToGame(this);
     this.active = true
     this.fly(speed)
-    this.spriteImg = MediaLoader.getImage(
-      "../../assets/sprites/items/arrow.png"
-    );
   }
 
   fly(speed) {

@@ -4,12 +4,7 @@ import { DroppedItem } from "./DroppedItem.js";
 
 export class Jar extends CollisionEntity {
   constructor(game, info) {
-    super(game, false, info);
-    this.spriteImg = MediaLoader.getImage(
-      "../../assets/sprites/objects/jar1.png",
-      36,
-      43
-    );
+    super(game, false, info, "../../assets/sprites/objects/jar1.png");
     this.game.addToGame(this);
     this.broken = false;
     this.frame = 0

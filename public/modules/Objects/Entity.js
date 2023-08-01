@@ -1,11 +1,14 @@
+import { MediaLoader } from "../Helpers/MediaLoader.js";
+
 export class Entity {
-    constructor(game, info){
+    constructor(game, info, spriteImg){
         this.game = game;
         this.ctx = this.game.ctx;
         this.x = info.x
         this.y = info.y
         this.height = info.height
         this.width = info.width
+        if(spriteImg)this.spriteImg = MediaLoader.getImage(spriteImg);
     }
 
     drawSprite(x, y, width, height) {

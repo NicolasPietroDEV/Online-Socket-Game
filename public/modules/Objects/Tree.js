@@ -1,12 +1,10 @@
-import { MediaLoader } from "../Helpers/MediaLoader.js";
 import { CollisionEntity } from "./CollisionEntity.js";
 
 export class Tree extends CollisionEntity {
   constructor(game, info) {
-    super(game, false, info);
+    super(game, false, info, "../assets/sprites/objects/tree.png");
     this.game = game;
     this.ctx = this.game.ctx;
-    this.spriteImg = MediaLoader.getImage("../assets/sprites/objects/tree.png", 42,51)
     this.game.addToGame(this);
   }
 

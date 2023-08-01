@@ -1,6 +1,5 @@
 import { MediaLoader } from "../Helpers/MediaLoader.js";
 import { CollisionEntity } from "../Objects/CollisionEntity.js";
-import { Jar } from "../Objects/Jar.js";
 
 export class Sword extends CollisionEntity {
   constructor(game, user) {
@@ -13,7 +12,7 @@ export class Sword extends CollisionEntity {
         width: user.width,
         height: user.height,
       },
-      false
+      "../assets/sprites/items/sword.png"
     );
     this.user = user;
     this.spriteMap = {
@@ -25,7 +24,6 @@ export class Sword extends CollisionEntity {
     this.abovePlayer = false
 
     this.frame = 0;
-    this.spriteImg = MediaLoader.getImage("../assets/sprites/items/sword.png", 70,100)
     this.canUse = true;
     this.user.addWeapon(this);
     if (this.game.devMode) {

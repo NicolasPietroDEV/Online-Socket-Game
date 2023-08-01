@@ -9,7 +9,7 @@ export class Bow extends Entity {
             y: user.y,
             width: 21,
             height: 21
-        })
+        },"../../assets/sprites/items/bow.png")
         this.user = user
         this.spriteMap = {
             "up": 0,
@@ -24,7 +24,6 @@ export class Bow extends Entity {
             "right": "left"
         }
         this.abovePlayer = false
-        this.spriteImg = MediaLoader.getImage("../../assets/sprites/items/bow.png", 21,21)
         user.addWeapon(this)
         this.canUse = true
         this.isUsing = false

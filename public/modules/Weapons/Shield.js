@@ -8,7 +8,7 @@ export class Shield extends Entity {
             y: user.y,
             width: 21,
             height: 21
-        })
+        }, "../../assets/sprites/items/shield.png")
         this.user = user
         this.spriteMap = {
             "up": 3,
@@ -23,7 +23,6 @@ export class Shield extends Entity {
             "right": "left"
         }
         this.abovePlayer = false
-        this.spriteImg = MediaLoader.getImage("../../assets/sprites/items/shield.png", 21,21)
         user.addWeapon(this)
         this.canUse = true
     }
