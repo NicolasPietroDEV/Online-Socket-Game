@@ -30,7 +30,7 @@ export class Player extends CollisionEntity {
     this.life = playerInfo.life;
     this.immuneFrom = false;
     this.canChangeDirection = true
-    this.inventory = { arrow: 10, bomb: 10 }
+    this.inventory = { arrow: {current: 10, limit: 50}, bomb: {current: 10, limit: 30} }
     this.spriteImg = MediaLoader.getImage("../assets/sprites/player/sprite.png", 200,200)
     this.lifeBar = MediaLoader.getImage("../assets/sprites/misc/lifebar.png", 30,10)
     if (!notAdd) this.game.addToGame(this);
@@ -90,6 +90,10 @@ export class Player extends CollisionEntity {
       blinkState: this.blinkState,
       inventory: this.inventory
     };
+  }
+
+  addItem(item, amount){
+    if(this.inventory[item].current+amount < this.inventory[item].limit){this.inventory[item].current += amount} else {this.inventory[item].current = this.inventory[item].limit}
   }
 
   isYourPlayer() {

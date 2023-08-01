@@ -38,9 +38,9 @@ export class Bomb {
         if (
             this.game.entities.findIndex((entity) => {
               return entity.use && entity.user == this.user;
-            }) == -1 && this.user.inventory.bomb
+            }) == -1 && this.user.inventory.bomb.current
           ) {
-            this.user.inventory.bomb -= 1
+            this.user.inventory.bomb.current -= 1
         new BombEntity(this.game, {
             x: this.positionX,
             y: this.positionY,

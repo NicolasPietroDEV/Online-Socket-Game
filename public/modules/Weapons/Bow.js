@@ -75,9 +75,9 @@ export class Bow extends Entity {
             this.game.entities.findIndex((entity) => {
               return entity.use && entity.user == this.user;
             }) == -1 &&
-            this.canUse && this.user.inventory.arrow
+            this.canUse && this.user.inventory.arrow.current
           ) {
-              this.user.inventory.arrow -=1
+              this.user.inventory.arrow.current -=1
               this.abovePlayer = this.user.direction == "down"
               this.game.addToGame(this)
               this.canUse = false

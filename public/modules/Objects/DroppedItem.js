@@ -4,19 +4,18 @@ import { CollisionEntity } from "./CollisionEntity.js";
 export class DroppedItem extends CollisionEntity {
     constructor(game, info, item){
         super(game, true, info)
-        this.dropQuantity = {
-            "bomb": 5,
-            "arrow": 10
+        this.itemInfo = {
+            "bomb": {
+                drop: 5,
+                image: "../../assets/sprites/items/bomb_drop.png"
+            },
+            "arrow": {
+                drop: 10,
+                image: "../../assets/sprites/items/arrow_drop.png" 
+            }
         }
         this.item = item
-        switch(item){
-            case "arrow":
-                this.spriteImg = MediaLoader.getImage("../../assets/sprites/items/arrow_drop.png", 32, 36)
-                break
-            case "bomb":
-                this.spriteImg = MediaLoader.getImage("../../assets/sprites/items/bomb_drop.png", 32, 36)
-                break
-        }
+        this.spriteImg = MediaLoader.getImage(this.itemInfo[item].image, 32, 36)     
         this.game.addToGame(this)
         this.disappearIn(5000)
         this.visible = true
@@ -27,7 +26,7 @@ export class DroppedItem extends CollisionEntity {
     }
 
     trigger(){
-        this.game.mainPlayer.inventory[this.item] += this.dropQuantity[this.item]
+        this.game.mainPlayer.addItem(this.item, this.itemInfo[this.item].drop)
         this.game.removeFromGame(this)
     }
 
