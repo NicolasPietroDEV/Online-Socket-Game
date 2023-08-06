@@ -7,11 +7,10 @@ import { House } from "./Objects/House.js";
 import { Tree } from "./Objects/Tree.js";
 import { Jar } from "./Objects/Jar.js";
 import { Interface } from "./Helpers/Interface.js";
-import { ClassTranslator } from "./Helpers/ClassTranslator.js";
 
 export class Game {
   entities = [];
-  devMode = true;
+  devMode = false;
 
   constructor(ctx, canvas, chat) {
     this.chat = chat
