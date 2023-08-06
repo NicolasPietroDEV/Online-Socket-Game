@@ -7,10 +7,11 @@ import { House } from "./Objects/House.js";
 import { Tree } from "./Objects/Tree.js";
 import { Jar } from "./Objects/Jar.js";
 import { Interface } from "./Helpers/Interface.js";
+import { ClassTranslator } from "./Helpers/ClassTranslator.js";
 
 export class Game {
   entities = [];
-  devMode = false;
+  devMode = true;
 
   constructor(ctx, canvas, chat) {
     this.chat = chat
@@ -75,6 +76,11 @@ export class Game {
     new Jar(this, {x: 580, y: 120, width:34, height: 41})
     new Jar(this, {x: 580, y: 170, width:34, height: 41})
 
+    new Jar(this, {x: 60, y: 60, width:34, height: 41})
+    new Jar(this, {x: 60, y: 820, width:34, height: 41})
+    new Jar(this, {x: 900, y: 820, width:34, height: 41})
+    new Jar(this, {x: 900, y: 60, width:34, height: 41})
+
   }
 
   drawScenery(){
@@ -102,7 +108,8 @@ export class Game {
         y: info.y,
         id: info.id,
         color: info.color,
-        direction: info.direction
+        direction: info.direction,
+        hotbar: info.hotbar
     })
   }
 
@@ -119,6 +126,7 @@ export class Game {
     for (let player of sortedEntities){
       if(player.draw)player.draw()
     }
+    this.interface.drawHud()
     this.interface.drawInterface()
     return sortedEntities
   }

@@ -4,11 +4,18 @@ import { Shield } from "../Weapons/Shield.js";
 import { MediaLoader } from "../Helpers/MediaLoader.js";
 import { Bow } from "../Weapons/Bow.js";
 import { Bomb } from "../Weapons/Bomb.js";
+import { LifePotion } from "../Weapons/LifePotion.js";
+import { ClassTranslator } from "../Helpers/ClassTranslator.js";
 
 export class Player extends CollisionEntity {
   constructor(game, playerInfo, notAdd) {
     super(game, true, playerInfo, "../assets/sprites/player/sprite.png");
-    this.weapons = [];
+    this.weapons = [...this.createBlankSpaces(3)];
+    
+    this.itemInventory = [...this.createBlankSpaces(21)]
+    playerInfo.hotbar && playerInfo.hotbar.forEach((item)=>{
+      new (ClassTranslator.stringToObject(item))(game, this)
+    })
     this.game = game;
     this.ctx = this.game.ctx;
     this.directionMapping = {
@@ -28,6 +35,7 @@ export class Player extends CollisionEntity {
     this.blinkState = true;
     this.frame = 1;
     this.life = playerInfo.life;
+    this.maxLife = 10
     this.immuneFrom = false;
     this.canChangeDirection = true
     this.inventory = { arrow: {current: 10, limit: 50}, bomb: {current: 10, limit: 30} }
@@ -36,10 +44,11 @@ export class Player extends CollisionEntity {
     if (this.game.devMode) console.log("Player created");
     this.draw();
     this.animate();
-    new Sword(game, this);
+    if(!playerInfo.hotbar){new Sword(game, this);
     new Shield(game, this);
     new Bow(game, this)
     new Bomb(game, this)
+    new LifePotion(game, this)}
   }
 
   get collisionY() {
@@ -89,6 +98,10 @@ export class Player extends CollisionEntity {
       blinkState: this.blinkState,
       inventory: this.inventory
     };
+  }
+
+  getHotbarInfo(){
+    return this.weapons.map((item)=>item.type)
   }
 
   addItem(item, amount){
@@ -319,6 +332,29 @@ export class Player extends CollisionEntity {
   }
 
   addWeapon(weapon) {
-    this.weapons.push(weapon);
+    if(this.countUsedSlots(this.weapons)<3){
+      this.weapons[this.findEmptySlot(this.weapons)] = weapon;} 
+    else {this.itemInventory[this.findEmptySlot(this.itemInventory)] = weapon}
+  }
+
+  removeWeapon(weapon){
+    let hotbarIndx = this.weapons.findIndex((item)=>item == weapon)
+    let inventoryIndx = this.itemInventory.findIndex((item)=>item == weapon)
+    if(hotbarIndx != -1){
+      this.weapons[hotbarIndx] = {}
+    } else if (inventoryIndx != -1){
+      this.itemInventory[inventoryIndx] = {}
+    }
+  }
+  createBlankSpaces(amount){
+    let blankSpaces = [];
+    for (let i=0; i<amount; i++) blankSpaces.push({})
+    return blankSpaces
+  }
+  countUsedSlots(inventory){
+    return inventory.filter((item)=>Object.keys(item)!=0).length
+  }
+  findEmptySlot(inventory){
+    return inventory.findIndex((item)=>Object.keys(item)==0)
   }
 }

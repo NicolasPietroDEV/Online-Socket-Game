@@ -29,6 +29,9 @@ export class Sword extends CollisionEntity {
     if (this.game.devMode) {
       console.log("Sword Created");
     }
+    this.itemImg = MediaLoader.getImage("../../assets/sprites/items/sword_item.png")
+    this.type = "sword";
+
   }
 
   get collisionX() {

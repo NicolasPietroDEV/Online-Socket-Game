@@ -45,6 +45,8 @@ export class Jar extends CollisionEntity {
       this.createDrop("arrow");
     } else if (random >= 30 && random <= 50) {
       this.createDrop("bomb");
+    } else if (random >= 50 && random <=60){
+      this.createDrop("life_potion")
     }
   }
 

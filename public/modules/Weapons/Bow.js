@@ -27,6 +27,9 @@ export class Bow extends Entity {
         user.addWeapon(this)
         this.canUse = true
         this.isUsing = false
+        this.itemImg = MediaLoader.getImage("../../assets/sprites/items/bow_item.png")
+        this.type = "bow"
+
     }
 
     draw(){

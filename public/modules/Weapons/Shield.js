@@ -25,6 +25,8 @@ export class Shield extends Entity {
         this.abovePlayer = false
         user.addWeapon(this)
         this.canUse = true
+        this.itemImg = MediaLoader.getImage("../../assets/sprites/items/shield_item.png")
+        this.type = "shield"
     }
 
     draw(){

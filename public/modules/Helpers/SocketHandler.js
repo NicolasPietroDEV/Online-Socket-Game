@@ -1,3 +1,6 @@
+import { Player } from "../Objects/Player.js"
+import { ClassTranslator } from "./ClassTranslator.js"
+
 export class SocketHandler {
     constructor(game){
         this.game = game
@@ -58,6 +61,15 @@ export class SocketHandler {
             </div>`
             this.chat.scrollTop = this.chat.scrollHeight
           })
+
+          this.socket.on("changeInventory", (info)=>{
+            let player = this.game.entities.find((entity)=>entity instanceof Player && entity.id == info.id)
+            for(let index in info.hotbar){
+              if(player.weapons[index].type != info.hotbar[index]){
+                player.weapons[index] = new (ClassTranslator.stringToObject(info.hotbar[index]))(this.game, player)
+              }
+            }
+          })
           
           this.socket.on("yourId", (id)=>{this.game.mainPlayer.id = id})
           this.socket.on("disconnect", ()=>{
@@ -68,7 +80,7 @@ export class SocketHandler {
 
     emitNewPlayer(){
 
-        this.socket.emit("newPlayer", {...this.game.mainPlayer.getPlayerInfo(), to: this.room})
+        this.socket.emit("newPlayer", {...this.game.mainPlayer.getPlayerInfo(), hotbar: this.game.mainPlayer.getHotbarInfo(), to: this.room})
     }
 
     emitMovement(){
@@ -81,11 +93,14 @@ export class SocketHandler {
     }
 
     joinRoom(room){
-      this.socket.emit("joinRoom", {player: this.game.mainPlayer.getPlayerInfo(), room: room||this.room})
+      this.socket.emit("joinRoom", {player: {...this.game.mainPlayer.getPlayerInfo(), hotbar: this.game.mainPlayer.getHotbarInfo()}, room: room||this.room})
     }
 
     emitWeaponUsed(index, state){
       this.socket.emit("useWeapon", {to: this.room, weapon: index, state: state})
     }
 
+    emitNewHotbar(hotbar){
+      this.socket.emit("changeInventory", {to: this.room, hotbar: hotbar})
+    }
 }

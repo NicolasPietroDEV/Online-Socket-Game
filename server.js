@@ -32,7 +32,8 @@ io.on("connection", (socket) => {
 
   socket.on("moveMyself", (info) => {
     completeInfo = { ...info, id: socket.id };
-    rooms[info.to].players[rooms[info.to].players.findIndex((playerInfo) => playerInfo.id === socket.id)] = completeInfo
+    let index = rooms[info.to].players.findIndex((playerInfo) => playerInfo.id === socket.id)
+    rooms[info.to].players[index] = {...rooms[info.to].players[index],...completeInfo}
     socket.broadcast.to(info.to).emit("peopleMoved", completeInfo);
   });
   socket.on("newPlayer", (info) => {
@@ -44,6 +45,12 @@ io.on("connection", (socket) => {
   socket.on("useWeapon", (info)=>{
     completeInfo = { ...info, id: socket.id };
     socket.broadcast.to(info.to).emit("useWeapon", completeInfo)
+  })
+
+  socket.on("changeInventory", (info)=>{
+    completeInfo = {...info, id: socket.id}
+    rooms[info.to].players[rooms[info.to].players.findIndex((playerInfo) => playerInfo.id === socket.id)].hotbar = info.hotbar
+    socket.broadcast.to(info.to).emit("changeInventory", completeInfo)
   })
 
   socket.on("disconnect", () => {
@@ -61,7 +68,7 @@ io.on("connection", (socket) => {
   socket.on("joinRoom", (info) => {
     socket.join(info.room);
     completeInfo = { ...info.player, id: socket.id };
-
+    
     console.log("user ",  socket.id, " joined room ", info.room)
     if (!Object.keys(rooms).includes(info.room)) {
       rooms[info.room] = { players: [completeInfo] };

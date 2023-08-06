@@ -1,3 +1,4 @@
+import { ClassTranslator } from "../Helpers/ClassTranslator.js";
 import { MediaLoader } from "../Helpers/MediaLoader.js";
 import { CollisionEntity } from "./CollisionEntity.js";
 
@@ -6,12 +7,18 @@ export class DroppedItem extends CollisionEntity {
         super(game, true, info)
         this.itemInfo = {
             "bomb": {
+                type: "consumable",
                 drop: 5,
                 image: "../../assets/sprites/items/bomb_drop.png"
             },
             "arrow": {
+                type: "consumable",
                 drop: 10,
                 image: "../../assets/sprites/items/arrow_drop.png" 
+            },
+            "life_potion": {
+                type: "item",
+                image: "../../assets/sprites/items/life_potion_drop.png"
             }
         }
         this.item = item
@@ -26,7 +33,9 @@ export class DroppedItem extends CollisionEntity {
     }
 
     trigger(){
-        this.game.mainPlayer.addItem(this.item, this.itemInfo[this.item].drop)
+        if(this.itemInfo[this.item].type == "consumable"){this.game.mainPlayer.addItem(this.item, this.itemInfo[this.item].drop)} else 
+        if(this.itemInfo[this.item].type == "item"){new (ClassTranslator.stringToObject(this.item))(this.game, this.game.mainPlayer)}
+
         this.game.removeFromGame(this)
     }
 

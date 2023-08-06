@@ -1,3 +1,4 @@
+import { MediaLoader } from "../Helpers/MediaLoader.js";
 import { BombEntity } from "../Objects/BombEntity.js";
 
 export class Bomb {
@@ -7,6 +8,8 @@ export class Bomb {
         this.width = 30
         this.height = 34
         this.user.addWeapon(this)
+        this.itemImg = MediaLoader.getImage("../../assets/sprites/items/bomb_item.png");
+        this.type = "bomb"
     }
 
     get positionX(){
