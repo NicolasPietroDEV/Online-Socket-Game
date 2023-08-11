@@ -18,8 +18,6 @@ export class ClassTranslator {
         return ClassTranslator.relation[name]
     }
 
-    static arrayToObjects(array){
-        return array.map(ClassTranslator.stringToObject)
-    }
+    
     
 }

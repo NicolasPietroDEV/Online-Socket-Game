@@ -83,13 +83,13 @@ export class InputHandler {
           }
         }
         let collisionInfo = this.mainPlayer.getCollisionInfo();
-        this.game.checkAllCollisions(collisionInfo, true)
+        let collides = this.game.checkAllCollisions(collisionInfo, true, false, ["bomb_entity", "player"])
         if (
           this.movementHandler["up"] &&
-          !this.game.checkAllCollisions({
+          (!this.game.checkAllCollisions({
             ...collisionInfo,
             y: collisionInfo.y - this.mainPlayer.speed,
-          })
+          })|| collides) 
         ) {
           this.mainPlayer.y -= this.mainPlayer.speed;
           if (
@@ -102,10 +102,10 @@ export class InputHandler {
         }
         if (
           this.movementHandler["left"] &&
-          !this.game.checkAllCollisions({
+          (!this.game.checkAllCollisions({
             ...collisionInfo,
             x: collisionInfo.x - this.mainPlayer.speed,
-          })
+          })||collides)
         ) {
           this.mainPlayer.x -= this.mainPlayer.speed;
           if (
@@ -118,10 +118,10 @@ export class InputHandler {
         }
         if (
           this.movementHandler["down"] &&
-          !this.game.checkAllCollisions({
+          (!this.game.checkAllCollisions({
             ...collisionInfo,
             y: collisionInfo.y + this.mainPlayer.speed,
-          })
+          })||collides)
         ) {
           this.mainPlayer.y += this.mainPlayer.speed;
           if (
@@ -134,10 +134,10 @@ export class InputHandler {
         }
         if (
           this.movementHandler["right"] &&
-          !this.game.checkAllCollisions({
+          (!this.game.checkAllCollisions({
             ...collisionInfo,
             x: collisionInfo.x + this.mainPlayer.speed,
-          })
+          })||collides)
         ) {
           this.mainPlayer.x += this.mainPlayer.speed;
           if (
@@ -169,6 +169,7 @@ export class InputHandler {
     }
   }
 
+  // OTIMIZAR //
   useKey(index, state) {
     if (state && this.game.mainPlayer.weapons[index].use) {
       this.game.mainPlayer.weapons[index].use();

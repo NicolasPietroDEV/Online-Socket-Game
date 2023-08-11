@@ -143,11 +143,11 @@ export class Game {
     this.ctx.fillStyle = "yellow"
     this.ctx.fillText(`X: ${parseInt(posX)- this.cameraPositionX} Y: ${parseInt(posY)- this.cameraPositionY}`, posX, posY)
   }
-
-  checkAllCollisions(sprite, triggerEvent, ignoreObject){
+  // refazer pelo amor de deus
+  checkAllCollisions(sprite, triggerEvent, ignoreObject, onlyTypes){
     return !this.entities.every((entity)=>{
       if (((entity.collidesWith||false) && entity.collidesWith(sprite)) && triggerEvent && entity.trigger) entity.trigger()
-      return (!(entity.collidesWith && entity.collidesWith(sprite)) || entity==ignoreObject) || entity.canPassThrough
+      return (onlyTypes && !onlyTypes.includes(entity.type)) || (((!(entity.collidesWith && entity.collidesWith(sprite))) || entity==ignoreObject) || entity.canPassThrough)
     })
   }
 

@@ -1,5 +1,9 @@
 import { Game } from "./modules/Game.js";
 
+setInterval(()=>{
+  localStorage.setItem("isGameRunning", true);
+}, 2000)
+
 let nickname = localStorage.getItem("name");
 if (!nickname) {
   window.location.replace("/login");
@@ -29,8 +33,11 @@ botao.addEventListener("click", sendMessage);
 login.addEventListener("click", goToLogin);
 
 function OnStart() {
-  GameInstance = new Game(ctx, canvas, chat);
+  if(!JSON.parse(localStorage.getItem("isGameRunning"))){
+    GameInstance = new Game(ctx, canvas, chat);
   if (GameInstance.devMode){window.game = GameInstance}
+  localStorage.setItem("isGameRunning", true)
+  }
 }
 
 function sendMessage() {
@@ -64,3 +71,7 @@ window.OnDisconnect = function(){
   container.style.display = "none";
   error.style.display = "flex"
 }
+
+window.addEventListener("beforeunload", function(){
+  localStorage.setItem("isGameRunning", false)
+}, false);

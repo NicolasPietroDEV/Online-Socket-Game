@@ -15,6 +15,7 @@ export class Interface {
         this.pointerImg = MediaLoader.getImage("../../assets/sprites/gui/pointer.png")
         this.playerInv = this.game.mainPlayer.inventory
         this.inventoryOpen = false
+        this.inventoryChanged = false
         this.inventoryPos = {
             x: this.game.canvas.width/2 - 376/2,
             y:this.game.canvas.height/2 - 352/2,
@@ -33,7 +34,8 @@ export class Interface {
     }
 
     openInventory(){
-        this.inventoryOpen && this.game.connection.emitNewHotbar(this.game.mainPlayer.getHotbarInfo())
+        this.inventoryOpen && this.inventoryChanged && this.game.connection.emitNewHotbar(this.game.mainPlayer.getHotbarInfo())
+        if(this.inventoryChanged)this.inventoryChanged = false
         this.inventoryOpen = !this.inventoryOpen
     }
 
@@ -43,6 +45,7 @@ export class Interface {
         let changeHotbar = this.game.mainPlayer.weapons[this.hotbarIndexes[key]]
         this.game.mainPlayer.weapons[this.hotbarIndexes[key]] = changeInventory || {}
         this.game.mainPlayer.itemInventory[itemIndex] = changeHotbar || {}
+        this.inventoryChanged = true
     }
 
 

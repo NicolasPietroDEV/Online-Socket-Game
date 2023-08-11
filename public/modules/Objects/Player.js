@@ -9,7 +9,8 @@ import { ClassTranslator } from "../Helpers/ClassTranslator.js";
 
 export class Player extends CollisionEntity {
   constructor(game, playerInfo, notAdd) {
-    super(game, true, playerInfo, "../assets/sprites/player/sprite.png");
+    super(game, false, playerInfo, "../assets/sprites/player/sprite.png");
+    this.type = "player"
     this.weapons = [...this.createBlankSpaces(3)];
     
     this.itemInventory = [...this.createBlankSpaces(21)]
@@ -34,8 +35,8 @@ export class Player extends CollisionEntity {
     this.isMoving = false;
     this.blinkState = true;
     this.frame = 1;
-    this.life = playerInfo.life;
     this.maxLife = 10
+    this.life = playerInfo.life;
     this.immuneFrom = false;
     this.canChangeDirection = true
     this.inventory = { arrow: {current: 10, limit: 50}, bomb: {current: 10, limit: 30} }
@@ -136,7 +137,7 @@ export class Player extends CollisionEntity {
   }
 
   respawn() {
-    this.life = 10;
+    this.life = this.maxLife;
     this.changePos({
       x: this.game.spawn.x,
       y: this.game.spawn.y,
@@ -276,7 +277,7 @@ export class Player extends CollisionEntity {
     this.ctx.fillRect(
       this.x + this.game.cameraPositionX,
       this.y - 10 + this.game.cameraPositionY,
-      this.life * 4.5,
+      45/this.maxLife * this.life,
       8
     );
 
@@ -291,6 +292,12 @@ export class Player extends CollisionEntity {
       29 * 2,
       9 * 2
     );
+    this.ctx.fillStyle = "black"
+    this.ctx.font = "8px PixelArt"
+    this.ctx.fillText(this.life+"/"+this.maxLife, 
+    this.x + this.game.cameraPositionX +10,
+    this.y + this.game.cameraPositionY-2,
+    )
   }
 
   #drawText() {

@@ -5,6 +5,7 @@ import { Explosion } from "./Explosion.js";
 export class BombEntity extends CollisionEntity {
   constructor(game, info) {
     super(game, false, info, "../../assets/sprites/items/bomb.png");
+    this.type = "bomb_entity"
     this.red = false
     this.canUse = true;
     this.game.addToGame(this);
