@@ -11,6 +11,7 @@ export class Player extends CollisionEntity {
   constructor(game, playerInfo, notAdd) {
     super(game, false, playerInfo, "../assets/sprites/player/sprite.png");
     this.type = "player"
+    this.kills = 0
     this.weapons = [...this.createBlankSpaces(3)];
     
     this.itemInventory = [...this.createBlankSpaces(21)]
@@ -36,6 +37,7 @@ export class Player extends CollisionEntity {
     this.blinkState = true;
     this.frame = 1;
     this.maxLife = 10
+    this.kills = playerInfo.kills || 0
     this.life = playerInfo.life;
     this.immuneFrom = false;
     this.canChangeDirection = true
@@ -97,7 +99,8 @@ export class Player extends CollisionEntity {
       isMoving: this.isMoving,
       life: this.life,
       blinkState: this.blinkState,
-      inventory: this.inventory
+      inventory: this.inventory,
+      kills: this.kills
     };
   }
 
@@ -143,6 +146,11 @@ export class Player extends CollisionEntity {
       y: this.game.spawn.y,
       direction: "down",
     });
+  }
+
+  die(killerId){
+    killerId && killerId!=this.id && this.game.connection.emitKill(killerId)
+    this.respawn()
   }
 
   startImmunity(time) {
@@ -247,7 +255,7 @@ export class Player extends CollisionEntity {
     }, 10);
   }
 
-  takeDamage(amount, knockback, direction, ignoreImmunity) {
+  takeDamage(amount, knockback, direction, ignoreImmunity, killerId) {
     if (this.canTakeDamage && (this.immuneFrom != direction || ignoreImmunity)) {
       this.startImmunity(300);
       this.startBlinking();
@@ -256,7 +264,7 @@ export class Player extends CollisionEntity {
         if (knockback) this.takeKnockbackTo(knockback, direction, 10);
       } else {
         this.life = 0;
-        this.respawn();
+        this.die(killerId)
         this.game.resetCamera();
         if (this.game.mainPlayer == this) this.game.connection.emitMovement();
       }

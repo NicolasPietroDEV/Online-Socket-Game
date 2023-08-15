@@ -3,8 +3,9 @@ import { CollisionEntity } from "./CollisionEntity.js";
 import { Explosion } from "./Explosion.js";
 
 export class BombEntity extends CollisionEntity {
-  constructor(game, info) {
+  constructor(game, user ,info) {
     super(game, false, info, "../../assets/sprites/items/bomb.png");
+    this.user = user
     this.type = "bomb_entity"
     this.red = false
     this.canUse = true;
@@ -25,7 +26,7 @@ export class BombEntity extends CollisionEntity {
         this.exploded = true
         this.game.removeFromGame(this)
         MediaLoader.playSound("../../assets/sfx/bomb_blow.wav")
-        new Explosion(this.game, {
+        new Explosion(this.game,this.user, {
           x: this.x - 120/2 + this.width/2,
           y: this.y - 120/2 + this.height/2,
           width: 120,

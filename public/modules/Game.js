@@ -108,7 +108,8 @@ export class Game {
         id: info.id,
         color: info.color,
         direction: info.direction,
-        hotbar: info.hotbar
+        hotbar: info.hotbar,
+        kills: info.kills
     })
   }
 

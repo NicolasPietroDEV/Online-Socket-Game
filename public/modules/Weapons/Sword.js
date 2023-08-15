@@ -114,7 +114,7 @@ export class Sword extends CollisionEntity {
     
 
   trigger() {
-    this.game.mainPlayer.takeDamage(1, 40, this.user.direction)
+    this.game.mainPlayer.takeDamage(1, 40, this.user.direction, false, this.user.id)
     
   }
 

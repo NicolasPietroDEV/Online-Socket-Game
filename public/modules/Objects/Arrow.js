@@ -55,7 +55,7 @@ export class Arrow extends CollisionEntity {
 
   trigger(){
     if(this.active && !this.user.isYourPlayer() ){
-        this.game.mainPlayer.takeDamage(1, 20, this.direction)
+        this.game.mainPlayer.takeDamage(1, 20, this.direction, false, this.user.id || false)
         this.game.removeFromGame(this)
     }
   }

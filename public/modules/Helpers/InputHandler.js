@@ -75,6 +75,8 @@ export class InputHandler {
   startMovementChecker() {
     setInterval(() => {
       let moved = false;
+      let speed = this.mainPlayer.speed
+      if(Object.values(this.movementHandler).filter((a)=>a).length == 2){speed = Math.sqrt((speed**2)/2)}
       if (this.mainPlayer.canMove) {
         for (let key of Object.keys(this.movementHandler)) {
           if (this.movementHandler[key] && this.mainPlayer.canChangeDirection) {
@@ -88,64 +90,64 @@ export class InputHandler {
           this.movementHandler["up"] &&
           (!this.game.checkAllCollisions({
             ...collisionInfo,
-            y: collisionInfo.y - this.mainPlayer.speed,
+            y: collisionInfo.y - speed,
           })|| collides) 
         ) {
-          this.mainPlayer.y -= this.mainPlayer.speed;
+          this.mainPlayer.y -= speed;
           if (
             this.game.cameraPositionY < 0 &&
             this.game.mainPlayer.y + this.game.cameraPositionY <
               this.game.canvas.height / 2 - this.mainPlayer.height / 2
           )
-            this.game.cameraPositionY += this.mainPlayer.speed;
+            this.game.cameraPositionY += speed;
           moved = true;
         }
         if (
           this.movementHandler["left"] &&
           (!this.game.checkAllCollisions({
             ...collisionInfo,
-            x: collisionInfo.x - this.mainPlayer.speed,
+            x: collisionInfo.x - speed,
           })||collides)
         ) {
-          this.mainPlayer.x -= this.mainPlayer.speed;
+          this.mainPlayer.x -= speed;
           if (
             this.game.cameraPositionX < 0 &&
             this.game.mainPlayer.x + this.game.cameraPositionX <
               this.game.canvas.width / 2 - this.mainPlayer.width / 2
           )
-            this.game.cameraPositionX += this.mainPlayer.speed;
+            this.game.cameraPositionX += speed;
           moved = true;
         }
         if (
           this.movementHandler["down"] &&
           (!this.game.checkAllCollisions({
             ...collisionInfo,
-            y: collisionInfo.y + this.mainPlayer.speed,
+            y: collisionInfo.y + speed,
           })||collides)
         ) {
-          this.mainPlayer.y += this.mainPlayer.speed;
+          this.mainPlayer.y += speed;
           if (
             -this.game.cameraPositionY < this.game.canvas.height &&
             this.game.mainPlayer.y >
               this.game.canvas.height / 2 - this.mainPlayer.height / 2
           )
-            this.game.cameraPositionY -= this.mainPlayer.speed;
+            this.game.cameraPositionY -= speed;
           moved = true;
         }
         if (
           this.movementHandler["right"] &&
           (!this.game.checkAllCollisions({
             ...collisionInfo,
-            x: collisionInfo.x + this.mainPlayer.speed,
+            x: collisionInfo.x + speed,
           })||collides)
         ) {
-          this.mainPlayer.x += this.mainPlayer.speed;
+          this.mainPlayer.x += speed;
           if (
             -this.game.cameraPositionX < this.game.canvas.width &&
             this.game.mainPlayer.x >
               this.game.canvas.width / 2 - this.mainPlayer.width / 2
           )
-            this.game.cameraPositionX -= this.mainPlayer.speed;
+            this.game.cameraPositionX -= speed;
           moved = true;
         }
       }

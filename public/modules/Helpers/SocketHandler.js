@@ -70,6 +70,11 @@ export class SocketHandler {
               }
             }
           })
+
+          this.socket.on("newKill", (info)=>{
+            let player = this.game.entities.find((entity)=>entity instanceof Player && entity.id == info.killerId)
+            player.kills += 1
+          })
           
           this.socket.on("yourId", (id)=>{this.game.mainPlayer.id = id})
           this.socket.on("disconnect", ()=>{
@@ -102,5 +107,9 @@ export class SocketHandler {
 
     emitNewHotbar(hotbar){
       this.socket.emit("changeInventory", {to: this.room, hotbar: hotbar})
+    }
+
+    emitKill(killerId){
+      this.socket.emit("newKill", {to: this.room, killerId:killerId})
     }
 }

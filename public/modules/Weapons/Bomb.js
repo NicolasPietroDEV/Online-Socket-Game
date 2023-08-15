@@ -44,7 +44,7 @@ export class Bomb {
             }) == -1 && this.user.inventory.bomb.current
           ) {
             this.user.inventory.bomb.current -= 1
-        new BombEntity(this.game, {
+        new BombEntity(this.game,this.user, {
             x: this.positionX,
             y: this.positionY,
             width: this.width,

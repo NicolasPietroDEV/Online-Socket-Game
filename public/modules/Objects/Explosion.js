@@ -2,8 +2,9 @@ import { MediaLoader } from "../Helpers/MediaLoader.js";
 import { CollisionEntity } from "./CollisionEntity.js";
 
 export class Explosion extends CollisionEntity {
-    constructor(game, info) {
+    constructor(game, user ,info) {
         super(game, true, info, "../../assets/sprites/misc/explosion.png")
+        this.user = user
         this.game.addToGame(this)
         this.inverseMap = {
             "up": "down",
@@ -26,6 +27,6 @@ export class Explosion extends CollisionEntity {
     }
 
     trigger(){
-        this.game.mainPlayer.takeDamage(3, 50, this.inverseMap[this.game.mainPlayer.direction], true)
+        this.game.mainPlayer.takeDamage(3, 50, this.inverseMap[this.game.mainPlayer.direction], true, this.user.id)
     }
 }
