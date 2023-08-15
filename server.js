@@ -3,7 +3,6 @@ const app = express();
 const http = require("http");
 const server = http.createServer(app);
 const { Server } = require("socket.io");
-const session = require('express-session');
 const io = new Server(server, {
   cors: {
     origin: "http://127.0.0.1:5501",
@@ -15,11 +14,6 @@ let players = [];
 let rooms = {};
 
 app.use(express.static("public"));
-app.use(session({
-  secret: 'your-secret-key',
-  resave: false,
-  saveUninitialized: true,
-}))
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
