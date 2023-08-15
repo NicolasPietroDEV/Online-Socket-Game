@@ -3,12 +3,23 @@ const app = express();
 const http = require("http");
 const server = http.createServer(app);
 const { Server } = require("socket.io");
-const io = new Server(server);
+const session = require('express-session');
+const io = new Server(server, {
+  cors: {
+    origin: "http://127.0.0.1:5501",
+    methods: ["GET", "POST"]
+  }
+});
 
 let players = [];
 let rooms = {};
 
 app.use(express.static("public"));
+app.use(session({
+  secret: 'your-secret-key',
+  resave: false,
+  saveUninitialized: true,
+}))
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
@@ -28,8 +39,7 @@ app.get("/login", (req, res) => {
 });
 
 io.on("connection", (socket) => {
-  console.log("a user connected: " + socket.id);
-
+  console.log("a user is connecting: " + socket.id);
   socket.on("moveMyself", (info) => {
     completeInfo = { ...info, id: socket.id };
     let index = rooms[info.to].players.findIndex((playerInfo) => playerInfo.id === socket.id)
@@ -65,11 +75,16 @@ io.on("connection", (socket) => {
     io.to(message.to).emit("newMessage", completeInfo);
   });
 
+  socket.on("newKill", (info)=>{
+    completeInfo = { ...info, id: socket.id };
+    rooms[info.to].players.find(player=>player.id == info.killerId).kills += 1 
+    io.to(info.to).emit("newKill", completeInfo);
+  })
+
   socket.on("joinRoom", (info) => {
     socket.join(info.room);
     completeInfo = { ...info.player, id: socket.id };
-    
-    console.log("user ",  socket.id, " joined room ", info.room)
+    console.log("user ",  socket.id, `(${info.player.name})`, " joined room ", info.room)
     if (!Object.keys(rooms).includes(info.room)) {
       rooms[info.room] = { players: [completeInfo] };
     } else {
@@ -85,8 +100,8 @@ io.on("connection", (socket) => {
     roomsToLeave.splice(roomsToLeave.findIndex(room=>room == socket.id), 1)
     for (let room of roomsToLeave){
       socket.broadcast.to(room).emit("playerLeft", socket.id);
-      console.log("user ",  socket.id, " left room ", room)
       let playerIndex = rooms[room].players.findIndex(player => player.id == socket.id)
+      console.log("user ",  socket.id, `(${rooms[room].players[playerIndex].name})`, " left room ", room)
       rooms[room].players.splice(playerIndex, 1)
       if(rooms[room].players.length == 0){delete rooms[room]}
 
