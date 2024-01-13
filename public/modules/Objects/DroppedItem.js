@@ -35,7 +35,7 @@ export class DroppedItem extends CollisionEntity {
     trigger(){
         if(this.itemInfo[this.item].type == "consumable"){this.game.mainPlayer.addItem(this.item, this.itemInfo[this.item].drop)} else 
         if(this.itemInfo[this.item].type == "item"){new (ClassTranslator.stringToObject(this.item))(this.game, this.game.mainPlayer)}
-
+        MediaLoader.playSound("../../assets/sfx/pickDrop.wav")
         this.game.removeFromGame(this)
     }
 

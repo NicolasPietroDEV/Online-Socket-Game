@@ -1,4 +1,6 @@
 import { Player } from "../Objects/Player.js"
+import { Mob } from "../Objects/Mob.js"
+
 import { ClassTranslator } from "./ClassTranslator.js"
 
 export class SocketHandler {
@@ -45,6 +47,7 @@ export class SocketHandler {
           })
           
           this.socket.on("oldPlayers", (oldPlayers)=>this.game.createPlayers(oldPlayers))
+          this.socket.on("loadMapInfo", (map)=>this.game.loadMap(map))
           
           this.socket.on("newMessage", (message)=>{
             let time = new Date()
@@ -74,6 +77,11 @@ export class SocketHandler {
           this.socket.on("newKill", (info)=>{
             let player = this.game.entities.find((entity)=>entity instanceof Player && entity.id == info.killerId)
             player.kills += 1
+          })
+
+          this.socket.on("mobNewPosition", (info)=>{
+            let mob = this.game.entities.find((entity)=>entity.code==info.code)
+            if(mob){mob.updateMob(info)}else{new Mob(this.game, info)}
           })
           
           this.socket.on("yourId", (id)=>{this.game.mainPlayer.id = id})
@@ -111,5 +119,9 @@ export class SocketHandler {
 
     emitKill(killerId){
       this.socket.emit("newKill", {to: this.room, killerId:killerId})
+    }
+
+    emitMobDamage(mobId, amount, direction){
+      this.socket.emit("mobDamage", {to: this.room, id: mobId, amount: amount, playerId: this.game.mainPlayer.id, direction: direction})
     }
 }

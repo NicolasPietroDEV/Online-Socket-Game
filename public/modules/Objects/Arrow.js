@@ -33,9 +33,10 @@ export class Arrow extends CollisionEntity {
           this.x += speed;
           break;
       }
+      if(this.game.damageMobsCollidingWith(this.getCollisionInfo(), this.direction)){this.game.removeFromGame(this); clearInterval(flyLoop)}
       if (this.game.checkAllCollisions(this.getCollisionInfo(), false, this.user)) {
         clearInterval(flyLoop);
-        MediaLoader.playSound("../../assets/sfx/arrow_hit.mp3")
+        // MediaLoader.playSound("../../assets/sfx/arrow_hit.mp3")
         this.active = false;
         setTimeout(()=>{
             this.game.removeFromGame(this)

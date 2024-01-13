@@ -14,6 +14,7 @@ export class Explosion extends CollisionEntity {
         }
         this.disappearIn(500)
         this.game.breakJarsCollidingWith(this.getCollisionInfo())
+        this.game.damageMobsCollidingWith(this.getCollisionInfo())
     }
 
     disappearIn(time){

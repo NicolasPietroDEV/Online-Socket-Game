@@ -131,7 +131,7 @@ export class Player extends CollisionEntity {
         this.blinkState = !this.blinkState;
       }
       counter++;
-      if (this.canMove) {
+      if (this.canTakeDamage) {
         clearInterval(blinkAnimation);
         this.blinkState = true;
         this.isYourPlayer() && this.game.connection.emitMovement();
@@ -155,10 +155,10 @@ export class Player extends CollisionEntity {
 
   startImmunity(time) {
     this.canTakeDamage = false;
-    this.canMove = false;
+    // this.canMove = false;
     setTimeout(() => {
       this.canTakeDamage = true;
-      this.canMove = true;
+      // this.canMove = true;
     }, time);
   }
 
@@ -257,7 +257,7 @@ export class Player extends CollisionEntity {
 
   takeDamage(amount, knockback, direction, ignoreImmunity, killerId) {
     if (this.canTakeDamage && (this.immuneFrom != direction || ignoreImmunity)) {
-      this.startImmunity(300);
+      this.startImmunity(1000);
       this.startBlinking();
       if (this.life - amount > 0) {
         this.life -= amount;
@@ -284,7 +284,7 @@ export class Player extends CollisionEntity {
     this.ctx.fillStyle = "red";
     this.ctx.fillRect(
       this.x + this.game.cameraPositionX,
-      this.y - 10 + this.game.cameraPositionY,
+      this.y - 8 + this.game.cameraPositionY,
       45/this.maxLife * this.life,
       8
     );

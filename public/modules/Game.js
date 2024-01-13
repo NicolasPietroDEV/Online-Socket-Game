@@ -2,11 +2,10 @@
 import { InputHandler } from "./Helpers/InputHandler.js";
 import { Player } from "./Objects/Player.js";
 import { SocketHandler } from "./Helpers/SocketHandler.js";
-import { Wall } from "./Objects/Wall.js";
-import { House } from "./Objects/House.js";
-import { Tree } from "./Objects/Tree.js";
 import { Jar } from "./Objects/Jar.js";
 import { Interface } from "./Helpers/Interface.js";
+import { ClassTranslator } from "./Helpers/ClassTranslator.js";
+import { Mob } from "./Objects/Mob.js";
 
 export class Game {
   entities = [];
@@ -19,8 +18,8 @@ export class Game {
 
     this.sceneryImg = new Image(240,240) 
     this.sceneryImg.src = "../assets/sprites/maps/map.png"   
-    this.sceneryHeight = 1000
-    this.sceneryWidth = 1000
+    this.sceneryHeight = 0
+    this.sceneryWidth = 0
     
     this.spawn = {
       x: 476,
@@ -44,7 +43,7 @@ export class Game {
     this.input = new InputHandler(this, canvas);
     this.interface = new Interface(this)
     this.input.startMovementChecker()
-    this.createWallsCollision()
+    // this.createWallsCollision()
     if(this.devMode)console.log("Game started")
     this.connection.joinRoom()
     this.ctx.imageSmoothingEnabled = false
@@ -55,31 +54,12 @@ export class Game {
     this.cameraPositionY = -(this.mainPlayer.y + this.mainPlayer.height/2 - this.canvas.height/2)
   }
 
-  createWallsCollision(){
-    //top
-    new Wall(this,{x: 60, y: 10, width: this.sceneryWidth-120, height: 40})
-    //bottom
-    new Wall(this,{x: 60, y: this.sceneryHeight-120, width: this.sceneryWidth-120, height: 40}) 
-    //right
-    new Wall(this,{x: 10, y: 60, width: 40, height: this.sceneryHeight-180})
-    //left
-    new Wall(this,{x: this.sceneryWidth-50, y: 60, width: 40, height: this.sceneryHeight-180})
-
-    new House(this, {x: 422, y: 30, width:150, height:228})
-    
-    new Tree(this, {x: 200, y: 100, width:120, height: 144})
-    new Tree(this, {x: 670, y: 100, width:120, height: 144})
-
-    new Jar(this, {x: 380, y: 120, width:34, height: 41})
-    new Jar(this, {x: 380, y: 170, width:34, height: 41})
-    new Jar(this, {x: 580, y: 120, width:34, height: 41})
-    new Jar(this, {x: 580, y: 170, width:34, height: 41})
-
-    new Jar(this, {x: 60, y: 60, width:34, height: 41})
-    new Jar(this, {x: 60, y: 820, width:34, height: 41})
-    new Jar(this, {x: 900, y: 820, width:34, height: 41})
-    new Jar(this, {x: 900, y: 60, width:34, height: 41})
-
+  loadMap(map){
+    this.sceneryHeight = map.scenery.height
+    this.sceneryWidth = map.scenery.width
+    for(let entity of map.entities){
+      new (ClassTranslator.stringToObject(entity.type, "entity"))(this, entity)
+    }
   }
 
   drawScenery(){
@@ -209,5 +189,18 @@ export class Game {
         jar.break()
       }
     }
+  }
+
+  damageMobsCollidingWith(sprite, direction){
+    let mobs = this.entities.filter((entity)=>entity instanceof Mob)
+    let damage = 2;
+
+    for (let mob of mobs){
+      if (mob.collidesWith(sprite)){
+        mob.takeDamage(direction, 2)
+        return true
+      }
+    }
+    return false
   }
 }

@@ -5,6 +5,7 @@ export class CollisionEntity extends Entity{
     super(game, info, spriteImg)
     this.canPassThrough = canPassThrough;
     if (this.game.devMode) console.log("Collision Created");
+    
   }
 
   get collisionY() {

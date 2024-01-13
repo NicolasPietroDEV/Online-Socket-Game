@@ -173,6 +173,7 @@ export class Sword extends CollisionEntity {
       MediaLoader.playSound(`../../assets/sfx/swing${Math.ceil(Math.random()*3)}.wav`)
       this.animate();
       this.game.breakJarsCollidingWith(this.getCollisionInfo())
+      if(this.user.id == this.game.mainPlayer.id){this.game.damageMobsCollidingWith(this.getCollisionInfo(), this.game.mainPlayer.direction)}
       this.abovePlayer = this.user.direction == "down";
       this.user.frame = 1;
       this.user.stopMoving(300)
