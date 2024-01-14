@@ -37,7 +37,6 @@ export class DroppedItem extends CollisionEntity {
         this.bounceSwitch = false
         this.controller = 1
         this.bounceInterval = setInterval(()=>{
-            console.log("bolas")
             if (this.controller >= 5){this.bounceSwitch=true} else
             if (this.controller <= 1){this.bounceSwitch=false}
             if (this.bounceSwitch) {this.controller-=1; this.y -=1} else {this.controller +=1; this.y +=1}
