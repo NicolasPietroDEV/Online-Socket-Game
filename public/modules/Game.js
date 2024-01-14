@@ -191,16 +191,15 @@ export class Game {
     }
   }
 
-  damageMobsCollidingWith(sprite, direction){
+  damageMobsCollidingWith(sprite, direction, damage){
     let mobs = this.entities.filter((entity)=>entity instanceof Mob)
-    let damage = 2;
-
+    let hit = false
     for (let mob of mobs){
       if (mob.collidesWith(sprite)){
-        mob.takeDamage(direction, 2)
-        return true
+        mob.takeDamage(direction, damage || 2)
+        hit = true
       }
     }
-    return false
+    return hit
   }
 }
