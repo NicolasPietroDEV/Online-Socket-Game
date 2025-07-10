@@ -43,7 +43,6 @@ export class Game {
     this.input = new InputHandler(this, canvas);
     this.interface = new Interface(this)
     this.input.startMovementChecker()
-    // this.createWallsCollision()
     if(this.devMode)console.log("Game started")
     this.connection.joinRoom()
     this.ctx.imageSmoothingEnabled = false
@@ -124,13 +123,20 @@ export class Game {
     this.ctx.fillStyle = "yellow"
     this.ctx.fillText(`X: ${parseInt(posX)- this.cameraPositionX} Y: ${parseInt(posY)- this.cameraPositionY}`, posX, posY)
   }
-  // refazer pelo amor de deus
-  checkAllCollisions(sprite, triggerEvent, ignoreObject, onlyTypes){
-    return !this.entities.every((entity)=>{
-      if (((entity.collidesWith||false) && entity.collidesWith(sprite)) && triggerEvent && entity.trigger) entity.trigger()
-      return (onlyTypes && !onlyTypes.includes(entity.type)) || (((!(entity.collidesWith && entity.collidesWith(sprite))) || entity==ignoreObject) || entity.canPassThrough)
-    })
-  }
+  checkAllCollisions(sprite, triggerEvent = true, ignoreObject, returnFalseToTypesArray) {
+  return this.entities.some((entity) => {
+    const canCollide = entity.collidesWith && entity.collidesWith(sprite);
+    if (canCollide && triggerEvent && entity.trigger) {
+      entity.trigger();
+    }
+    if (entity === ignoreObject) {
+      return false;
+    }
+    return canCollide && 
+           !entity.canPassThrough && 
+           (!returnFalseToTypesArray || returnFalseToTypesArray.includes(entity.type));
+  });
+}
 
   turnDevMode(){
     this.devMode = !this.devMode;
