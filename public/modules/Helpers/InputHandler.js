@@ -74,96 +74,73 @@ export class InputHandler {
 
   startMovementChecker() {
     setInterval(() => {
-      let moved = false;
-      let speed = this.mainPlayer.speed
-      if(Object.values(this.movementHandler).filter((a)=>a).length == 2){speed = Math.sqrt((speed**2)/2)}
-      if (this.mainPlayer.canMove) {
-        for (let key of Object.keys(this.movementHandler)) {
-          if (this.movementHandler[key] && this.mainPlayer.canChangeDirection) {
-            this.mainPlayer.direction = key;
-            moved = true;
-          }
+
+        let moved = false;
+        let speed = this.mainPlayer.speed;
+        
+        // Ajusta a velocidade para movimento diagonal
+        if(Object.values(this.movementHandler).filter((a)=>a).length == 2) {
+            speed = Math.sqrt((speed**2)/2);
         }
-        let collisionInfo = this.mainPlayer.getCollisionInfo();
-        let collides = this.game.checkAllCollisions(collisionInfo, true, false, ["bomb_entity", "player"])
-        if (
-          this.movementHandler["up"] &&
-          (!this.game.checkAllCollisions({
-            ...collisionInfo,
-            y: collisionInfo.y - speed,
-          })|| collides) 
-        ) {
-          this.mainPlayer.y -= speed;
-          if (
-            this.game.cameraPositionY < 0 &&
-            this.game.mainPlayer.y + this.game.cameraPositionY <
-              this.game.canvas.height / 2 - this.mainPlayer.height / 2
-          )
-            this.game.cameraPositionY += speed;
-          moved = true;
+
+        if (this.mainPlayer.canMove) {
+            // Atualiza direção do jogador
+            for (let key of Object.keys(this.movementHandler)) {
+                if (this.movementHandler[key] && this.mainPlayer.canChangeDirection) {
+                    this.mainPlayer.direction = key;
+                    moved = true;
+                }
+            }
+
+            let collisionInfo = this.mainPlayer.getCollisionInfo();
+            let collides = this.game.checkAllCollisions(collisionInfo, true, false, ["bomb_entity", "player"]);
+
+            // Movimento para cima
+            if (this.movementHandler["up"] && 
+                (!this.game.checkAllCollisions({...collisionInfo, y: collisionInfo.y - speed}) || collides)) {
+                this.mainPlayer.y -= speed;
+                this.game.changeCameraPosition("up", speed);
+                moved = true;
+            }
+
+            // Movimento para esquerda
+            if (this.movementHandler["left"] && 
+                (!this.game.checkAllCollisions({...collisionInfo, x: collisionInfo.x - speed}) || collides)) {
+                this.mainPlayer.x -= speed;
+                this.game.changeCameraPosition("left", speed);
+                moved = true;
+            }
+
+            // Movimento para baixo
+            if (this.movementHandler["down"] && 
+                (!this.game.checkAllCollisions({...collisionInfo, y: collisionInfo.y + speed}) || collides)) {
+                this.mainPlayer.y += speed;
+                this.game.changeCameraPosition("down", speed);
+                moved = true;
+            }
+
+            // Movimento para direita
+            if (this.movementHandler["right"] && 
+                (!this.game.checkAllCollisions({...collisionInfo, x: collisionInfo.x + speed}) || collides)) {
+                this.mainPlayer.x += speed;
+                this.game.changeCameraPosition("right", speed);
+                moved = true;
+            }
         }
-        if (
-          this.movementHandler["left"] &&
-          (!this.game.checkAllCollisions({
-            ...collisionInfo,
-            x: collisionInfo.x - speed,
-          })||collides)
-        ) {
-          this.mainPlayer.x -= speed;
-          if (
-            this.game.cameraPositionX < 0 &&
-            this.game.mainPlayer.x + this.game.cameraPositionX <
-              this.game.canvas.width / 2 - this.mainPlayer.width / 2
-          )
-            this.game.cameraPositionX += speed;
-          moved = true;
+
+        // Atualiza estado de movimento do jogador
+        let wasPreviouslyMoving = this.mainPlayer.isMoving;
+        this.mainPlayer.isMoving = moved;
+        
+        if (wasPreviouslyMoving || this.mainPlayer.isMoving) {
+            this.game.connection.emitMovement();
         }
-        if (
-          this.movementHandler["down"] &&
-          (!this.game.checkAllCollisions({
-            ...collisionInfo,
-            y: collisionInfo.y + speed,
-          })||collides)
-        ) {
-          this.mainPlayer.y += speed;
-          if (
-            -this.game.cameraPositionY < this.game.canvas.height &&
-            this.game.mainPlayer.y >
-              this.game.canvas.height / 2 - this.mainPlayer.height / 2
-          )
-            this.game.cameraPositionY -= speed;
-          moved = true;
-        }
-        if (
-          this.movementHandler["right"] &&
-          (!this.game.checkAllCollisions({
-            ...collisionInfo,
-            x: collisionInfo.x + speed,
-          })||collides)
-        ) {
-          this.mainPlayer.x += speed;
-          if (
-            -this.game.cameraPositionX < this.game.canvas.width &&
-            this.game.mainPlayer.x >
-              this.game.canvas.width / 2 - this.mainPlayer.width / 2
-          )
-            this.game.cameraPositionX -= speed;
-          moved = true;
-        }
-      }
-      let wasPreviouslyMoving = this.mainPlayer.isMoving;
-      if (moved) {
-        this.mainPlayer.isMoving = true;
-      } else {
-        this.mainPlayer.isMoving = false;
-      }
-      
-      if (wasPreviouslyMoving || this.mainPlayer.isMoving) {
-        this.game.connection.emitMovement();
-      }
-      this.game.refreshEntities();
+        
+        this.game.refreshEntities();
     }, 20);
-  }
+}
+
+
 
   stopAllInputs() {
     for (let input of Object.keys(this.movementHandler)) {

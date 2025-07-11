@@ -10,10 +10,11 @@ body {
 }
 
 #form {
-    width: 25vw;
+    width: 20vw;
     padding: 40px 20px;
     border-radius: 20px;
     background-color: rgba(0, 0, 0, 0.362);
+    min-width: fit-content;
     
 }
 
@@ -23,15 +24,17 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
+    flex-wrap: wrap;
 }
 
 .input {
     display: block;
-    width: 60%;
+    width: 50%;
     height: 40px;
     border-radius: 20px;
     border: 0;
-    padding-left: 2vw
+    padding-left: 2vw;
+    min-width: 110px;
   } 
 
   #enter {
@@ -54,11 +57,12 @@ body {
 
 p {
     font-family: "Helvetica";
-    font-size: 24px;
+    font-size: 100%;
     color: #FFFFFF;
     text-align: center;
     font-weight: 700;
-    margin: 0
+    margin: 0;
+    width: 20%
 }
 
 datalist {

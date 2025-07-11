@@ -12,33 +12,24 @@ body {
   font-family: "Helvetica";
 }
 
-#canvas {
-  width: 500px;
-  height: 500px;
-  display: inline;
-}
+
 
 #messages {
-  height: calc(80% + 30px);
+  height: 80%;
   overflow: auto;
   margin: 5px auto;
 }
 
 #form {
 width: 100%;
+height: 20%;
 display: flex;
 justify-content: center;
 align-items: center;
 gap: 10px;
 }
 
-#chat {
-  background-color: rgba(0, 0, 0, 0.362);
-  background-size: cover;
-  width: 30%;
-  height: 80%;
-  border-radius: 20px
-}
+
 
 .message {
   color: #FFFFFF;
@@ -71,15 +62,7 @@ gap: 10px;
   text-align: center;
 }
 
-#container {
-  display: flex;
-  width: 100vw;
-  height: 100vh;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px
-}
+
 
 #campomensagem {
   width: 70%;
@@ -125,13 +108,15 @@ gap: 10px;
 
 #login {
   position: absolute;
+    top: 10px;
+  left: 10px;
   width: 40px;
   height: 40px;
-  top: 40px;
-  left: 40px;
+
   border-radius: 40px;
   padding: 2px 4px 2px 1px;
   background-color: #FFFFFF;
+  
 
 }
 #login:hover {
@@ -143,6 +128,10 @@ gap: 10px;
 
 #login > img {
   width: 100%; 
+}
+
+#login > p {
+  display: none;
 }
 
 #messages::-webkit-scrollbar {
@@ -166,16 +155,79 @@ gap: 10px;
   text-align: center;
 }
 
-@media (max-width: 700px) {
-  #canvas{
-    width: 100vw;
-    height: 100vw;
+#canvas {
+  width: 50vw;
+  height: 80vh;
 }
 
 #chat {
-  width: 80%;
+  background-color: rgba(0, 0, 0, 0.362);
+  background-size: cover;
+  width: 40%;
+  height: 80%;
+  border-radius: 20px;
 }
-body {
+
+#container {
+  display: flex;
+  /* width: 100vw; */
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  flex-wrap: wrap;
+  gap: 20px
+}
+
+/* #container {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px
+} */
+
+@media (max-width: 800px) {
+  #canvas{
+    width: 90vw;
+    height: 50vh;
+    display: block;
+      margin:0 auto;
+  margin:0 auto 10px auto;
+
+}
+
+#chat {
+  width: 90%;
+  height: 40vh;
+  width: 90vw;
+  display: block;
+    margin:5px auto;
+
+}
+
+#container {
+  display: block;
+}
+
+#login > img {
+  display:none;
+}
+#login > p {
+  display: block;
+  margin:0;
+  width: 50px;
+  text-align: center;
+}
+#login {
+  width: auto;
+  height: auto;
+}
+/* body {
   overflow: visible;
+} */
 }
-}
+
+

@@ -146,8 +146,9 @@ io.on("connection", (socket) => {
   });
 
   socket.on("newKill", (info)=>{
-    completeInfo = { ...info, id: socket.id };
-    rooms[info.to].players.find(player=>player.id == info.killerId).kills += 1 
+    let player = rooms[info.to].players.find(player=>player.id == info.killerId)
+    player.kills += 1 
+    completeInfo = { ...info, id: socket.id, killerId: info.killerId, killCount: player.kills };
     io.to(info.to).emit("newKill", completeInfo);
   })
 

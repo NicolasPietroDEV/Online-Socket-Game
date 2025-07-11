@@ -17,11 +17,7 @@ let login = document.getElementById("login");
 let chat = document.getElementById("messages");
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
-var stylew = window.getComputedStyle(canvas);
-canvas.width = parseInt(stylew.width.substring(0, stylew.width.search("px")));
-canvas.height = parseInt(
-  stylew.height.substring(0, stylew.height.search("px"))
-);
+canvasSet()
 var GameInstance;
 
 campo.addEventListener("keypress", (event) => {
@@ -31,6 +27,30 @@ campo.addEventListener("keypress", (event) => {
 botao.addEventListener("click", sendMessage);
 
 login.addEventListener("click", goToLogin);
+window.addEventListener("resize", debounce(canvasSet, 300))
+function debounce(func, wait) {
+  let timeout;
+  return function() {
+    const context = this;
+    const args = arguments;
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      func.apply(context, args);
+    }, wait);
+  };
+}
+
+function canvasSet(){
+
+  var stylew = window.getComputedStyle(canvas);
+
+canvas.width = parseInt(stylew.width.substring(0, stylew.width.search("px")));
+canvas.height = parseInt(
+  stylew.height.substring(0, stylew.height.search("px"))
+);
+if (GameInstance) GameInstance.resetCamera()
+  
+}
 
 function OnStart() {
   if(!JSON.parse(localStorage.getItem("isGameRunning"))){
