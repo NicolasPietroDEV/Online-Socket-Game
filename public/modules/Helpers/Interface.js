@@ -63,7 +63,7 @@ export class Interface {
 
     drawInventory() {
         this.ctx.drawImage(this.inventoryImg, 1, 1, 94, 88, this.inventoryPos.x, this.inventoryPos.y, this.inventoryPos.width, this.inventoryPos.height)
-        this.ctx.drawImage(this.game.mainPlayer.spriteImg, 0,136, 48, 67, this.inventoryPos.x+ 32, this.inventoryPos.y+32,80, 120)
+        this.ctx.drawImage(this.game.mainPlayer.spriteImg, 0,0, 32, 32, this.inventoryPos.x+10, this.inventoryPos.y+15,128, 128)
         this.ctx.drawImage(this.pointerImg, 1,1, 12,12,this.inventoryPos.x+20+this.pointerPos.slotX*48,this.inventoryPos.y+175+this.pointerPos.slotY*48,48,48)
         let initial = this.inventoryPos.x+161
         for(let i = 0; i < 3; i++){

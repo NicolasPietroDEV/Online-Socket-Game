@@ -77,7 +77,6 @@ export class SocketHandler {
           this.socket.on("newKill", (info)=>{
             let player = this.game.entities.find((entity)=>entity instanceof Player && entity.id == info.killerId)
             player.kills = info.killCount
-            console.log("kill recebida", info.killerId, info.killCount)
           })
 
           this.socket.on("mobNewPosition", (info)=>{

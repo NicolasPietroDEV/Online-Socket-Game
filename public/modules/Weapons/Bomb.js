@@ -12,29 +12,31 @@ export class Bomb {
         this.type = "bomb"
     }
 
-    get positionX(){
-        switch(this.user.direction){
-            case "up":
-            case "down":
-                return this.user.x
-            case "left":
-                return this.user.x - this.width
-            case "right":
-                return this.user.x + this.width
+        get positionX() {
+        switch (this.user.direction) {
+          case "up":
+            return this.user.x + 30;
+          case "left":
+            return this.user.x;
+          case "down":
+            return this.user.x + this.width;
+          case "right":
+            return this.user.x + 70 ;
         }
-    }
-
-    get positionY(){
-        switch(this.user.direction){
-            case "left":
-            case "right":
-                return this.user.y + (this.user.height - this.height)
-            case "down":
-                return this.user.y + this.user.height
-            case "up":
-                return this.user.y - (this.height/2)
+      }
+    
+      get positionY() {
+        switch (this.user.direction) {
+          case "up":
+            return this.user.y ;
+          case "left":
+            return this.user.y + this.height +20;
+          case "down":
+            return this.user.y + this.height +50;
+          case "right":
+            return this.user.y + this.height +20;
         }
-    }
+      }
 
    
     use() {

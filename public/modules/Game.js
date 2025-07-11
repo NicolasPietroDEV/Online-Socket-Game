@@ -29,10 +29,11 @@ export class Game {
     this.mainPlayer = new Player(this, {
       x: 476,
       y: 280,
-      width: 40,
-      height: 60,
+      width: 96,
+      height: 96,
       speed: 4,
       life: 10,
+      skin: Math.ceil(Math.random()*6),
       direction: "down",
       color: `rgb(${this.#randomNumber()}, ${this.#randomNumber()}, ${this.#randomNumber()})`,
       name: localStorage.getItem("name") || "João Gomes Da Silva",
@@ -52,6 +53,40 @@ export class Game {
     this.cameraPositionX = -(this.mainPlayer.x + this.mainPlayer.width/2 - this.canvas.width/2)
     this.cameraPositionY = -(this.mainPlayer.y + this.mainPlayer.height/2 - this.canvas.height/2)
   }
+
+  changeCameraPosition(direction, speed) {
+    switch(direction) {
+        case "up":
+            if (this.cameraPositionY < 0 &&
+                this.mainPlayer.y + this.cameraPositionY < 
+                this.canvas.height / 2 - this.mainPlayer.height / 2) {
+                this.cameraPositionY += speed;
+            }
+            break;
+            
+        case "left":
+            if (this.cameraPositionX < 0 &&
+                this.mainPlayer.x + this.cameraPositionX < 
+                this.canvas.width / 2 - this.mainPlayer.width / 2) {
+                this.cameraPositionX += speed;
+            }
+            break;
+            
+        case "down":
+            if (-this.cameraPositionY < this.sceneryHeight - this.canvas.height &&
+                this.mainPlayer.y > this.canvas.height / 2 - this.mainPlayer.height / 2) {
+                this.cameraPositionY -= speed;
+            }
+            break;
+            
+        case "right":
+            if (-this.cameraPositionX < this.sceneryWidth - this.canvas.width &&
+                this.mainPlayer.x > this.canvas.width / 2 - this.mainPlayer.width / 2) {
+                this.cameraPositionX -= speed;
+            }
+            break;
+    }
+}
 
   loadMap(map){
     this.sceneryHeight = map.scenery.height
@@ -88,7 +123,8 @@ export class Game {
         color: info.color,
         direction: info.direction,
         hotbar: info.hotbar,
-        kills: info.kills
+        kills: info.kills,
+        skin: info.skin
     })
   }
 

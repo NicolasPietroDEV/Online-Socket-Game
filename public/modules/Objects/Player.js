@@ -9,7 +9,9 @@ import { ClassTranslator } from "../Helpers/ClassTranslator.js";
 
 export class Player extends CollisionEntity {
   constructor(game, playerInfo, notAdd) {
-    super(game, false, playerInfo, "../assets/sprites/player/sprite.png");
+    // super(game, false, playerInfo, "../assets/sprites/player/sprite.png");
+        super(game, false, playerInfo, `../assets/sprites/player/${playerInfo.skin}.png`);
+        this.skin = playerInfo.skin
     this.type = "player"
     this.kills = 0
     this.weapons = [...this.createBlankSpaces(3)];
@@ -20,12 +22,7 @@ export class Player extends CollisionEntity {
     })
     this.game = game;
     this.ctx = this.game.ctx;
-    this.directionMapping = {
-      up: 0,
-      left: 1,
-      down: 2,
-      right: 3,
-    };
+    
     this.id = playerInfo.id;
     this.direction = playerInfo.direction;
     this.speed = playerInfo.speed;
@@ -59,15 +56,15 @@ export class Player extends CollisionEntity {
   }
 
   get collisionHeight() {
-    return this.height / 2;
+    return this.height / 4 +10;
   }
 
   get collisionX() {
-    return this.x + this.width / 4 + this.game.cameraPositionX;
+    return this.x + this.width / 2 - this.collisionWidth/2 + this.game.cameraPositionX;
   }
 
   get collisionWidth() {
-    return this.width / 2;
+    return this.width / 3;
   }
 
   draw() {
@@ -100,7 +97,8 @@ export class Player extends CollisionEntity {
       life: this.life,
       blinkState: this.blinkState,
       inventory: this.inventory,
-      kills: this.kills
+      kills: this.kills,
+      skin: this.skin
     };
   }
 
@@ -118,10 +116,10 @@ export class Player extends CollisionEntity {
 
   animate() {
     setInterval(() => {
-      if (this.frame + 1 > 3 || !this.isMoving) {
+      if (this.frame + 1 > 3) {
         this.frame = 0;
       } else this.frame++;
-    }, 300);
+    }, 250);
   }
 
   startBlinking() {
@@ -189,9 +187,10 @@ export class Player extends CollisionEntity {
           }
           this.y -= knockbackPart;
           if (this.y <= initial.y - knockback) stop = true;
-          if (this.game.cameraPositionY + knockbackPart < 0) {
-            this.game.cameraPositionY += knockbackPart;
-          }
+          // if (this.game.cameraPositionY + knockbackPart < 0) {
+          //   this.game.cameraPositionY += knockbackPart;
+          // }
+          this.game.changeCameraPosition(direction, knockbackPart)
           break;
         case "left":
           if (
@@ -205,9 +204,8 @@ export class Player extends CollisionEntity {
           }
           this.x -= knockbackPart;
           if (this.x <= initial.x - knockback) stop = true;
-          if (this.game.cameraPositionX + knockbackPart < 0) {
-            this.game.cameraPositionX += knockbackPart;
-          }
+             this.game.changeCameraPosition(direction, knockbackPart)
+
           break;
         case "down":
           if (
@@ -221,12 +219,8 @@ export class Player extends CollisionEntity {
           }
           this.y += knockbackPart;
           if (this.y >= initial.y + knockback) stop = true;
-          if (
-            -(this.game.cameraPositionY - knockbackPart) <
-            this.game.canvas.height
-          ) {
-            this.game.cameraPositionY -= knockbackPart;
-          }
+            this.game.changeCameraPosition(direction, knockbackPart)
+
           break;
         case "right":
           if (
@@ -240,12 +234,8 @@ export class Player extends CollisionEntity {
           }
           this.x += knockbackPart;
           if (this.x >= initial.x + knockback) stop = true;
-          if (
-            -(this.game.cameraPositionX - knockbackPart) <
-            this.game.canvas.width
-          ) {
-            this.game.cameraPositionX -= knockbackPart;
-          }
+          this.game.changeCameraPosition(direction, knockbackPart)
+
           break;
       }
       this.isYourPlayer && this.game.connection.emitMovement();
@@ -271,20 +261,40 @@ export class Player extends CollisionEntity {
     }
   }
 
+  // #drawCharacter() {
+  //   this.drawSprite(
+  //     this.frame * 48,
+  //     this.directionMapping[this.direction] * 68,
+  //     48,
+  //     67
+  //   );
+  // }
   #drawCharacter() {
+    let directionMapping = this.isMoving ? {
+      up: 11,
+      left: 7,
+      down: 5,
+      right: 9,
+    }:
+    {
+      up: 3,
+      left: 2,
+      down: 0,
+      right: 1,
+    };
     this.drawSprite(
-      this.frame * 48,
-      this.directionMapping[this.direction] * 68,
-      48,
-      67
+      this.frame * 32,
+      directionMapping[this.direction] * 32,
+      32,
+      32
     );
   }
 
   #drawLifeBar() {
     this.ctx.fillStyle = "red";
     this.ctx.fillRect(
-      this.x + this.game.cameraPositionX,
-      this.y - 8 + this.game.cameraPositionY,
+      this.x + this.game.cameraPositionX + 30,
+      this.y+ this.game.cameraPositionY+5,
       45/this.maxLife * this.life,
       8
     );
@@ -296,15 +306,15 @@ export class Player extends CollisionEntity {
       29,
       9,
       this.x + this.game.cameraPositionX + this.width / 2 - 29,
-      this.y - 14 + this.game.cameraPositionY,
+      this.y + this.game.cameraPositionY,
       29 * 2,
       9 * 2
     );
     this.ctx.fillStyle = "black"
     this.ctx.font = "8px PixelArt"
     this.ctx.fillText(this.life+"/"+this.maxLife, 
-    this.x + this.game.cameraPositionX +10,
-    this.y + this.game.cameraPositionY-2,
+    this.x + this.game.cameraPositionX +38,
+    this.y + this.game.cameraPositionY +12,
     )
   }
 
@@ -316,7 +326,7 @@ export class Player extends CollisionEntity {
         this.width / 2 -
         this.ctx.measureText(this.name).width / 2 +
         this.game.cameraPositionX,
-      this.y - 24 + this.game.cameraPositionY,
+      this.y - 12 + this.game.cameraPositionY,
       this.ctx.measureText(this.name).width,
       12
     );
@@ -327,7 +337,7 @@ export class Player extends CollisionEntity {
         this.width / 2 -
         this.ctx.measureText(this.name).width / 2 +
         this.game.cameraPositionX,
-      this.y - 14 + this.game.cameraPositionY
+      this.y -2+ this.game.cameraPositionY
     );
   }
 
@@ -336,7 +346,7 @@ export class Player extends CollisionEntity {
     this.ctx.beginPath();
     this.ctx.ellipse(
       this.x + this.width / 2 + this.game.cameraPositionX,
-      this.y + this.height + this.game.cameraPositionY - 5,
+      this.y + this.height + this.game.cameraPositionY - 20,
       10,
       18,
       90 * (Math.PI / 180),

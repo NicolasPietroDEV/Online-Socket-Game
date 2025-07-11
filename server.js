@@ -32,22 +32,26 @@ async function mobMove(){
     for(let mob of rooms[room].entities.filter(en=>en.type=="mob") || []){
       let isAggroNear = false;
       let moved = false;
+   
       for(let player of rooms[room].players){
-        let distance = Math.sqrt(Math.pow(mob.x + mob.width/2 - (player.x+ player.width/2), 2) + Math.pow(mob.y + mob.height/2 - (player.y + player.height/2), 2));
+        let centerY = player.y+player.height/4
+        let centerX = player.x+player.width/4
+        let distance = Math.sqrt(Math.pow(mob.x + mob.width/2 - (centerX), 2) + Math.pow(mob.y + mob.height/2 - (centerY), 2));
         if(distance < 200 && mob.canMove ){
           if (!mob.aggro){mob.aggro = player.id}
           if(mob.aggro == player.id){isAggroNear = true}
           if (((mob.aggro == player.id) || !mob.aggro)){
           
           let speed = 2
-          if (mob.y>player.y+speed*2 && !checkCollision(room, mob, 0, -speed)){
+          
+          if (mob.y>centerY+speed*2 && !checkCollision(room, mob, 0, -speed)){
             mob.y-=speed; mob.direction = "down"; moved = true;
-          } else if(mob.y<player.y-speed*2 && !checkCollision(room, mob, 0, speed)){
+          } else if(mob.y<centerY-speed*2 && !checkCollision(room, mob, 0, speed)){
             mob.y+=speed; mob.direction = "up"; moved = true;
           }
-          if (mob.x>player.x+speed*2 && !checkCollision(room, mob, -speed, 0)){
+          if (mob.x>centerX+speed*2 && !checkCollision(room, mob, -speed, 0)){
             mob.x-=speed; mob.direction = "right"; moved = true;
-          }else if(mob.x<player.x-speed*2 && !checkCollision(room, mob, speed, 0)){
+          }else if(mob.x<centerX-speed*2 && !checkCollision(room, mob, speed, 0)){
             mob.x+=speed; mob.direction = "left"; moved = true;
           }
           

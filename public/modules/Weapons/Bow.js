@@ -46,29 +46,29 @@ export class Bow extends Entity {
         )
     }
 
-    get positionX() {
+        get positionX() {
         switch (this.user.direction) {
           case "up":
-            return this.user.x - this.width/2;
+            return this.user.x + 40;
           case "left":
-            return this.user.x - this.width;
+            return this.user.x;
           case "down":
             return this.user.x + this.width/2;
           case "right":
-            return this.user.x + this.width ;
+            return this.user.x + 55 ;
         }
       }
     
       get positionY() {
         switch (this.user.direction) {
           case "up":
-            return this.user.y + this.height / 2;
+            return this.user.y + this.height;
           case "left":
-            return this.user.y + this.height;
+            return this.user.y + this.height +20;
           case "down":
-            return this.user.y + this.height*1.5;
+            return this.user.y + this.height +25;
           case "right":
-            return this.user.y + this.height;
+            return this.user.y + this.height +20;
         }
       }
 

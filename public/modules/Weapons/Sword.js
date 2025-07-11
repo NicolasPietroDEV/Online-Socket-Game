@@ -45,9 +45,9 @@ export class Sword extends CollisionEntity {
           this.game.cameraPositionX
         );
       case "left":
-        return this.user.x - this.collisionWidth + this.game.cameraPositionX;
+        return this.user.x - this.collisionWidth + this.game.cameraPositionX +30;
       case "right":
-        return this.user.x + this.user.width + this.game.cameraPositionX;
+        return this.user.x + this.user.width + this.game.cameraPositionX - 30;
     }
   }
 
@@ -55,7 +55,7 @@ export class Sword extends CollisionEntity {
     switch (this.user.direction) {
       case "up":
         return (
-          this.user.y - this.collisionHeight / 2 + this.game.cameraPositionY
+          this.user.y - this.collisionHeight / 2 + this.game.cameraPositionY +20
         );
       case "left":
       case "right":
@@ -66,7 +66,7 @@ export class Sword extends CollisionEntity {
           this.game.cameraPositionY
         );
       case "down":
-        return this.user.y + this.user.height + this.game.cameraPositionY;
+        return this.user.y + this.user.height + this.game.cameraPositionY -10;
     }
   }
 
